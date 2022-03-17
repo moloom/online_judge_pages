@@ -1,5 +1,5 @@
 # online_judge_page
-
+vue create 项目名  创建vue项目
 ## Project setup
 ```
 npm install
