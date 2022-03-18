@@ -1,17 +1,25 @@
 <template>
-  <div id="app">
-    <NavMenu class="dd"></NavMenu>
+  <div>
+    <NavMenu v-show="!isLogin" class="dd"></NavMenu>
+    <Login v-show="isLogin"></Login>
   </div>
 </template>
 
 
 <script>
-  import NavMenu from './components/NavMenu.vue'
+import NavMenu from './components/NavMenu.vue'
+import Login from "@/views/Login";
 
 export default {
   name:"App",
+  data(){
+    return{
+      isLogin:true,
+    }
+  },
   components:{
     NavMenu,
+    Login,
   }
 }
 </script>
