@@ -1,0 +1,53 @@
+<!--自定义指令-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>--自定义指令--</title>
+
+    <script type="text/javascript" src="../vue.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <h2>当前n值{{n}}</h2>
+        <h2>放大10倍的n值<span v-big-number="n"></span></h2>
+        <h2>111<span v-fbind="n"></span></h2>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false
+
+
+        new Vue({
+            el: "#root",
+            data: {
+                n: 22,
+            },
+            directives: {
+                //简写形式默认只有，bind和update，没有inserted
+                "big-number":function(a, b) {
+                    console.log(a,b);
+                    a.innerText=b.value*10;
+                },
+                fbind:{
+                    //绑定元素时调用
+                    bind(elemnet,binding){
+                        console.log("bind");
+                    },
+                    //插入页面时
+                    inserted(elemnet,binding){
+                        console.log("inserted");
+                    },
+                    //数据更新时
+                    update(elemnet,binding){
+                        console.log("update");
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

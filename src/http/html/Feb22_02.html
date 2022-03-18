@@ -1,0 +1,44 @@
+<!--计算属性-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>计算属性</title>
+
+        <script type="text/javascript" src="../vue.js"></script>
+    </head>
+    <body>
+        
+        <div id="root">
+            姓：<input type="text" v-model="firstName" /><br/>
+            名：<input type="text" v-model="lastName"/><br/>
+            全名：<span style="color: red;font-size: 30px;">{{fullName}}<span>
+        </div>
+
+        <script type="text/javascript" >
+            Vue.config.productionTip=false
+
+
+            const vm = new Vue({
+                data:{
+                    firstName:"张",
+                    lastName:"三",
+                },
+                computed:{  //计算属性，也就是通过计算或处理得到的数据
+                    // fullName:{ //此处的 this 默认是vm 
+                    //     get(){//get在初始时调用，在所依赖的参数发生变化时调用
+                            
+                    //         return this.firstName+"-"+this.lastName;
+                    //     }
+                    // }
+                    //简写
+                    fullName(){ //此处的 this 默认时vm 
+                            return this.firstName+"-"+this.lastName;
+                    }
+                }
+                
+            })
+            vm.$mount("#root");
+        </script>
+    </body>
+</html>

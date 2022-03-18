@@ -1,0 +1,48 @@
+<!--
+    事件修饰符
+    在@click后加.修饰符名称，使用。
+    事件修饰符：
+    prevent：阻止默认事件
+    stop：阻止事件冒泡
+    once：事件只触发一次
+    capture：使用事件的捕获模式
+    self：只有event.target 是当前操作的元素是才触发事件
+    passive：事件的默认行为立即执行，无需等待事件回调执行完毕
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>February-按钮</title>
+
+        <script type="text/javascript" src="../vue.js"></script>
+    </head>
+    <body>
+        
+        <div id="root">
+            <h2>hello {{name}}</h2>
+            <button v-on:click="showInfo(77,$event)">{{button_name}}</button>
+        </div>
+
+        <script type="text/javascript" >
+            Vue.config.productionTip=false
+
+
+            const vm=new Vue({
+                data(){
+                    return{name:'moloom',button_name:'点我'}
+                },
+                methods:{
+                    showInfo(a,b){
+                        console.log(a,b);
+                        alert("你好");
+                    }
+                }
+            })
+
+            vm.$mount("#root");
+
+        </script>
+    </body>
+</html>
+
