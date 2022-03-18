@@ -1,7 +1,7 @@
 <template>
   <div>
-    <NavMenu v-show="!isLogin" class="dd"></NavMenu>
-    <Login v-show="isLogin"></Login>
+    <NavMenu v-show="isLogin" class="dd"></NavMenu>
+    <Login v-show="!isLogin"></Login>
   </div>
 </template>
 
