@@ -1,15 +1,14 @@
 
 import Vue from 'vue';
-import ElementUI from 'element-ui';
-// import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue';
-import './theme/index.css'
+import './theme/index.css'  //引入主题
 import router from './router'
 import store from './store'
-Vue.config.productionTip = false
+import ElementUI from 'element-ui';
 
 Vue.use(ElementUI);
 
+Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
