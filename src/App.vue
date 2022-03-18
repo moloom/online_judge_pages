@@ -1,32 +1,27 @@
 <template>
   <div>
-    <NavMenu v-show="isLogin" class="dd"></NavMenu>
-    <Login v-show="!isLogin"></Login>
+    <Home class="dd"></Home>
   </div>
 </template>
 
 
 <script>
-import NavMenu from './components/NavMenu.vue'
-import Login from "@/views/Login";
+import Home from "@/views/Home";
 
 export default {
   name:"App",
   data(){
     return{
-      isLogin:true,
     }
   },
   components:{
-    NavMenu,
-    Login,
+    Home,
   }
 }
 </script>
 
 <style>
 #app {
-  
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

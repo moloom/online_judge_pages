@@ -42,8 +42,8 @@
       </div>
       <div class="con-box right">
         <h2>欢迎来到<span>MOJ</span></h2>
-        <p v-show="isLogin">{{loginMsg}}</p>
-        <p v-show="!isLogin">{{retrieveMsg}}</p>
+        <p v-show="atLogin">{{loginMsg}}</p>
+        <p v-show="!atLogin">{{retrieveMsg}}</p>
         <img src="@/assets/xiaohei_3.gif" alt="">
         <p>没有帐号</p>
         <button @click="toRegister">去注册</button>
@@ -54,11 +54,9 @@
 </template>
 
 <script>
-
+import {mapActions} from "vuex"
 export default {
 
-
-  // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
   data() {
     return {
@@ -71,14 +69,14 @@ export default {
       lName: "",
       lPassword: "",
       loginMsg: "快点康康吧",
-      isLogin: true,
       //找回密码信息
       retrieveName: "",
       retrieveEmail: "",
       verifyCode: "",
       newPassword: "",
-      retrieveMsg:"输完邮箱后回车会自动发送邮箱验证码哦~",
+      retrieveMsg: "输完邮箱后回车会自动发送邮箱验证码哦~",
       //样式相关
+      atLogin: true,
       isDisplay: [false, true, false],
       classObj: {
         transformRegister: false,
@@ -103,22 +101,14 @@ export default {
       this.classObj.transformLogin = true;
       this.classObj.transformRegister = false;
       this.isDisplay.splice(0, 3, false, true, false);
-      this.isLogin = true;
+      this.atLogin = true;
     },
     toRetrievePassword() {
       //使用数组的方法，让vue可以检测到数组变化，从而重新解析模板。
       this.isDisplay.splice(0, 3, false, false, true);
-      this.isLogin = !this.isLogin;
+      this.atLogin = !this.atLogin;
     },
-    retrievePassword() {
-      console.log("retrievePassword");
-    },
-    register() {
-      console.log("register");
-    },
-    login() {
-      console.log("login");
-    },
+    ...mapActions("sLogin",["retrievePassword","register","login"]),
   },
 }
 </script>
