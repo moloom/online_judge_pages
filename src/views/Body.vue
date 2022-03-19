@@ -3,7 +3,7 @@
     <el-main class="juzhong">
       <div style="width: 1100px;margin: 0 auto;">  <!--这里控制列表的宽-->
         <div style="width: 60%;float: left;">
-          <CommentList></CommentList>
+          <HomeList></HomeList>
         </div>
       </div>
       <!-- 排行榜 -->
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import CommentList from "@/views/HomeList";
+import HomeList from "@/views/HomeList";
 
 export default {
   name: "Body",

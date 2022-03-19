@@ -13,17 +13,42 @@
       </el-row>
       <el-row class="clearMarginBottom">
         <el-col :span="24">
-          <div class="grid-content bg-purple-light"><p>saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd少时诵诗书是少时诵诗书2222222
+          <div class="grid-content bg-purple-light"><p>
+            saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd少时诵诗书是少时诵诗书2222222
             1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货s</p></div>
         </el-col>
       </el-row>
     </div>
+    <el-button type="primary" @click="testGet">点我get</el-button>
+    <el-button type="primary" @click="testGet2">点我get2</el-button>
   </div>
 </template>
 
 <script>
+
+import axios from "axios";
 export default {
-  name: "CommentList"
+  name: "HomeList",
+  methods: {
+    testGet() {
+      axios.get("http://127.0.0.1:8888/").then(
+          response => {
+            console.log("啦啦啦", response);
+          },
+          error => {
+            console.log("呜呜呜", error);
+          })
+    },
+    testGet2() {
+      axios.get("http://127.0.0.1:8888/api/test").then(
+          response => {
+            console.log("llllll", response.data);
+          },
+          error => {
+            console.log("wwwwww", error);
+          })
+    },
+  },
 }
 </script>
 
@@ -38,9 +63,10 @@ export default {
 
 }
 
-.clearMarginBottom{
+.clearMarginBottom {
   margin-bottom: 0px;
 }
+
 .el-col {
   border-radius: 4px;
 }
