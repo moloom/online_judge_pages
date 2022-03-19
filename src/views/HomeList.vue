@@ -13,8 +13,7 @@
       </el-row>
       <el-row class="clearMarginBottom">
         <el-col :span="24">
-          <div class="grid-content bg-purple-light"><p>saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd
-            是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd少时诵诗书是少时诵诗书2222222
+          <div class="grid-content bg-purple-light"><p>saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd少时诵诗书是少时诵诗书2222222
             1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货s</p></div>
         </el-col>
       </el-row>

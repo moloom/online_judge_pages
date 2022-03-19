@@ -26,7 +26,6 @@ const router = new VueRouter({
             path: "/problems",
             component: ProblemSet,
         },
-
     ]
 })
 

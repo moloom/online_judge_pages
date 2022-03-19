@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Home class="dd"></Home>
+    <Home></Home>
   </div>
 </template>
 
@@ -9,14 +9,14 @@
 import Home from "@/views/Home";
 
 export default {
-  name:"App",
-  data(){
-    return{
+  name: "App",
+  data() {
+    return {
     }
   },
-  components:{
+  components: {
     Home,
-  }
+  },
 }
 </script>
 
@@ -27,10 +27,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-.dd{
-  display: flex;
-  justify-content: space-around;
 }
 
 </style>

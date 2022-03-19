@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-Footer style="width:1000px;height: 400px;">Footer</el-Footer>
+    <div class="separator"></div>
+    <div class="footer">
+      footer
+    </div>
   </div>
 </template>
 
@@ -11,5 +14,16 @@ export default {
 </script>
 
 <style scoped>
+.separator {
+  width: 100%;
+  height: 70px;
+  overflow: hidden;
+}
 
+.footer {
+  width: 100%;
+  height: 300px;
+  background-color: #3a8ee6;
+  overflow: hidden;
+}
 </style>

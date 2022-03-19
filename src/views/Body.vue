@@ -14,20 +14,18 @@
       </div>
 
     </el-main>
-    <Footer></Footer>
   </div>
 </template>
 
 <script>
 import CommentList from "@/views/HomeList";
-import Footer from "@/views/Footer";
 
 export default {
   name: "Body",
   components: {
     CommentList,
-    Footer,
   },
+
 }
 </script>
 
