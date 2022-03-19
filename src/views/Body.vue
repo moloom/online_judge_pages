@@ -23,7 +23,7 @@ import HomeList from "@/views/HomeList";
 export default {
   name: "Body",
   components: {
-    CommentList,
+    HomeList,
   },
 
 }
