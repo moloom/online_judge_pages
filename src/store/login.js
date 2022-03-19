@@ -29,6 +29,7 @@ export default {
         lPassword: "",
         loginMsg: "快点康康吧",
         isLogin: false,
+        isAtLogin:true,//是否在登录界面，用于显示和隐藏界面。
         //找回密码信息
         retrieveName: "",
         retrieveEmail: "",

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 1200px; margin: 0 auto;">
+    <div style="width: 1200px; margin: 0 auto;" v-show="$store.state.sLogin.isAtLogin">
       <el-container class="GlobleCenter">
         <div>
           <el-header class="juzhong " style="width: 1150px;">
@@ -47,7 +47,7 @@
       </el-container>
     </div>
     <router-view></router-view>
-    <Footer></Footer>
+    <Footer v-show="$store.state.sLogin.isAtLogin"></Footer>
   </div>
 </template>
 
@@ -100,9 +100,15 @@ export default {
           this.activeIndex = path;
         } else this.activeIndex = "home";
       }
+      //防止用户直接在地址栏输入login
+      if (path === 'login')
+        this.$store.state.sLogin.isAtLogin = false;
+      else
+        this.$store.state.sLogin.isAtLogin = true;
     },
   },
   mounted() {
+
     this.updateActive();
   },
   beforeUpdate() {

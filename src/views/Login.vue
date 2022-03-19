@@ -42,19 +42,24 @@
       </div>
       <div class="con-box right">
         <h2>欢迎来到<span>MOJ</span></h2>
-        <p v-show="atLogin">{{loginMsg}}</p>
-        <p v-show="!atLogin">{{retrieveMsg}}</p>
+        <p v-show="atLogin">{{ loginMsg }}</p>
+        <p v-show="!atLogin">{{ retrieveMsg }}</p>
         <img src="@/assets/xiaohei_3.gif" alt="">
         <p>没有帐号</p>
         <button @click="toRegister">去注册</button>
       </div>
     </div>
-
+    <div id="closeButtonStyle">
+      <el-button style="width: 60px;height: 60px;"
+                 icon="el-icon-close" @click="closeLogin"
+                 circle type="primary"></el-button>
+    </div>
   </div>
 </template>
 
 <script>
 import {mapActions} from "vuex"
+
 export default {
 
   name: "Login",
@@ -108,7 +113,12 @@ export default {
       this.isDisplay.splice(0, 3, false, false, true);
       this.atLogin = !this.atLogin;
     },
-    ...mapActions("sLogin",["retrievePassword","register","login"]),
+    closeLogin(){
+      this.$router.push({
+        name: 'home',
+      })
+    },
+    ...mapActions("sLogin", ["retrievePassword", "register", "login"]),
   },
 }
 </script>
@@ -120,6 +130,15 @@ export default {
   padding: 0;
 }
 
+#closeButtonStyle {
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  padding: 50px 50px 0 0;
+}
+
+/* 实现中间紫色框移动动画 */
 .transformRegister {
   transform: translateX(80%);
 }
@@ -130,6 +149,7 @@ export default {
 
 .body {
   height: 100vh;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
