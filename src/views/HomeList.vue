@@ -31,7 +31,7 @@ export default {
   name: "HomeList",
   methods: {
     testGet() {
-      axios.get("http://127.0.0.1:8888/").then(
+      axios.get("/").then(
           response => {
             console.log("啦啦啦", response);
           },
@@ -40,7 +40,7 @@ export default {
           })
     },
     testGet2() {
-      axios.get("http://127.0.0.1:8888/api/test").then(
+      axios.post("/user/logins").then(
           response => {
             console.log("llllll", response.data);
           },

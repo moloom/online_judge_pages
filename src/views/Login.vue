@@ -5,18 +5,18 @@
         <!-- 注册 -->
         <div class="register-box" v-show="isDisplay[0]">
           <h1>register</h1>
-          <input type="text" placeholder="用户名" v-model="rName">
+          <input type="text" placeholder="昵称" v-model="rName">
           <input type="email" placeholder="邮箱" v-model="email">
           <input type="password" placeholder="密码" v-model="rPassword">
           <input type="password" placeholder="确认密码" v-model="checkPassword">
-          <button @click="register">注册</button>
+          <button @click="register({rName,email,rPassword,checkPassword,thisObj})">注册</button>
         </div>
         <!-- 登录 -->
         <div class="login-box" v-show="isDisplay[1]">
           <h1>login</h1>
-          <input type="text" placeholder="用户名" v-model="lName">
+          <input type="text" placeholder="昵称或邮箱" v-model="lName">
           <input type="password" placeholder="密码" v-model="lPassword">
-          <button @click="login">登录</button>
+          <button @click="login({lName,lPassword,thisObj})">登录</button>
           <button @click="clearLoginInfo">重置</button>
           <br>
           <el-link type="info" @click="toRetrievePassword">忘记密码啦？</el-link>
@@ -24,11 +24,11 @@
         <!--  找回密码  -->
         <div class="login-box" v-show="isDisplay[2]">
           <h1>retrieve</h1>
-          <input type="text" placeholder="用户名" v-model="retrieveName">
-          <input type="email" placeholder="邮箱" v-model="retrieveEmail">
-          <input type="password" placeholder="邮箱验证码" v-model="verifyCode">
+          <input type="text" placeholder="昵称" v-model="retrieveName">
+          <input type="text" placeholder="邮箱" v-model="retrieveEmail" ref="emailId" @keyup.enter="sendVerifyCode">
+          <input type="text" placeholder="邮箱验证码" v-model="verifyCode">
           <input type="password" placeholder="新密码" v-model="newPassword">
-          <button @click="retrievePassword">修改密码</button>
+          <button @click="retrievePassword({retrieveName,retrieveEmail,verifyCode,newPassword,thisObj})">修改密码</button>
           <br>
           <el-link type="info" @click="toLogin">想起密码啦？</el-link>
         </div>
@@ -42,8 +42,8 @@
       </div>
       <div class="con-box right">
         <h2>欢迎来到<span>MOJ</span></h2>
-        <p v-show="atLogin">{{ loginMsg }}</p>
-        <p v-show="!atLogin">{{ retrieveMsg }}</p>
+        <p v-show="atLogin">快点康康吧</p>
+        <p v-show="!atLogin">输完邮箱后回车会自动发送邮箱验证码哦~</p>
         <img src="@/assets/xiaohei_3.gif" alt="">
         <p>没有帐号</p>
         <button @click="toRegister">去注册</button>
@@ -59,12 +59,18 @@
 
 <script>
 import {mapActions} from "vuex"
+import {validateEMail} from "@/utils/validate";
+import axios from "axios";
+import qs from "qs";
+import {messageTips} from "@/utils/messageTip";
 
 export default {
 
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
   data() {
     return {
+      thisObj: this,
       //注册信息
       rName: "",
       email: "",
@@ -73,16 +79,15 @@ export default {
       //登录信息
       lName: "",
       lPassword: "",
-      loginMsg: "快点康康吧",
+      loginMsg: "",
       //找回密码信息
       retrieveName: "",
       retrieveEmail: "",
       verifyCode: "",
       newPassword: "",
-      retrieveMsg: "输完邮箱后回车会自动发送邮箱验证码哦~",
       //样式相关
       atLogin: true,
-      isDisplay: [false, true, false],
+      isDisplay: [false, true, false],//控制登录、注册、找回密码三个界面显示哪个，同一时刻只有一个为真。
       classObj: {
         transformRegister: false,
         transformLogin: false,
@@ -90,10 +95,44 @@ export default {
     }
   },
   methods: {
+    sendVerifyCode() {
+      this.$refs.emailId.blur();//失去焦点
+      if (validateEMail(this.retrieveEmail, this)) {
+        axios({
+          url: "/user/sendEmailVerifyCode",
+          method: "post",
+          data: qs.stringify({
+            email: this.retrieveEmail,
+          })
+        }).then(response => {
+              if (response.data) {
+                messageTips(this, "验证码发送成功", "success");
+              } else {
+                messageTips(this, "验证码发送失败", "error");
+              }
+            },
+            error => {
+              console.log("sendVerifyCode请求失败", error);
+              messageTips(this, '啊哦，网络打了个盹', "error");
+            })
+      }
+    },
     clearLoginInfo() {
       // 重置登录信息
       this.lName = "";
       this.lPassword = "";
+    },
+    resetAllData() {
+      this.rName = "";
+      this.email = "";
+      this.rPassword = "";
+      this.checkPassword = "";
+      this.lName = "";
+      this.lPassword = "";
+      this.retrieveName = "";
+      this.retrieveEmail = "";
+      this.verifyCode = "";
+      this.newPassword = "";
     },
     toRegister() {
       //去注册，移动方块
@@ -113,7 +152,7 @@ export default {
       this.isDisplay.splice(0, 3, false, false, true);
       this.atLogin = !this.atLogin;
     },
-    closeLogin(){
+    closeLogin() {
       this.$router.push({
         name: 'home',
       })

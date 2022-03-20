@@ -5,25 +5,27 @@
         <div>
           <el-header class="juzhong " style="width: 1150px;">
             <el-menu :default-active="activeIndex" class="el-menu-demo container" mode="horizontal"
-                     @select="handleSelect">
+                     >
               <el-menu-item index="home" @click="toHome">首页</el-menu-item>
               <el-menu-item index="problems" @click="toProblemSet">题库</el-menu-item>
-              <el-menu-item index="3">讨论</el-menu-item>
-              <el-menu-item index="problems">比赛</el-menu-item>
+              <el-menu-item index="comment">讨论</el-menu-item>
+              <el-menu-item index="bisai">比赛</el-menu-item>
               <el-menu-item
                   style="float: right;"
                   @click="toLogin"
-                  v-show="!this.$store.state.sLogin.isLogin">
+                  v-show="!this.$store.state.sLogin.users.isLogin">
                 <b>登录</b>
               </el-menu-item>
               <el-submenu
                   index="5"
                   style="float: right;"
-                  v-show="this.$store.state.sLogin.isLogin">
-                <template slot="title">昵称</template>
-                <el-menu-item index="5-1">选项1</el-menu-item>
-                <el-menu-item index="5-2">选项2</el-menu-item>
-                <el-menu-item index="5-3">选项3</el-menu-item>
+                  v-show="this.$store.state.sLogin.users.isLogin">
+                <template slot="title">{{ $store.state.sLogin.users.name }}</template>
+                <el-menu-item index="5-1">积分值：{{ $store.state.sLogin.users.point }}</el-menu-item>
+                <el-menu-item index="5-2">个人设置</el-menu-item>
+                <el-menu-item index="5-3">提交记录</el-menu-item>
+                <el-menu-item index="5-4">个人设置</el-menu-item>
+                <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
               <el-menu-item style="float: right;">
                 <el-input v-model="searchText" style="width: 80%;"
@@ -64,8 +66,8 @@ export default {
   },
   components: {Footer,},
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    logout() {
+      this.$store.state.sLogin.users.isLogin = false;
     },
     toLogin() {
       this.$router.push({
@@ -92,11 +94,9 @@ export default {
       if (name) {
         if (path !== "/") {
           path = path.slice(1);
-          console.log("1", path);
           let index = path.indexOf("/");
           if (index !== -1)
             path = path.slice(0, index);
-          console.log("2", path);
           this.activeIndex = path;
         } else this.activeIndex = "home";
       }
@@ -108,7 +108,6 @@ export default {
     },
   },
   mounted() {
-
     this.updateActive();
   },
   beforeUpdate() {
