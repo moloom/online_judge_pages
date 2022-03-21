@@ -47,29 +47,29 @@
               width="70px">
           </el-table-column>
           <el-table-column
-              prop="name"
+              prop="title"
               label="题目"
               width="357">
           </el-table-column>
           <el-table-column
-              prop=""
+              prop="point"
               label="奖励"
               width="70">
           </el-table-column>
           <el-table-column
-              prop=""
+              prop="difficultyName"
               label="难度"
               width="80">
           </el-table-column>
           <el-table-column
-              prop=""
+              prop="passRate"
               label="通过率"
               width="100">
           </el-table-column>
           <el-table-column
-              prop="id"
-              label="状态"
-              width="70px">--
+              prop="submit_pass_number"
+              label="通过人数"
+              width="70px">
           </el-table-column>
         </el-table>
       </div>
@@ -92,21 +92,25 @@ export default {
   name: "ProblemSet",
   data() {
     return {
+      keyword: "",
       visible: false,
       condition: {
         difficulty: 0,
         state: 0,
         tag: 0,
         keyword: "",
+        start: 0,
       },
       problemList: [{
         id: '',
         title: '',
         point: '',
         difficulty: '',
+        difficultyName: "",
         passRate: "",
         submit_times: "",
         submit_pass_times: "",
+        submit_pass_number: "",
       }],
       tagList: [{
         id: "",
@@ -118,26 +122,34 @@ export default {
   methods: {
     difficultyCommand(command) { //command属性类似id，下拉框的中的选项的唯一标识。方法在点击下拉框下的选项触发
       this.$message('难度： ' + command);
+      this.condition.difficulty = command;
+      this.searchProblemListByConditions();
     },
     stateCommand(command) {
       this.$message('状态： ' + command);
+      this.condition.state = command;
+      this.searchProblemListByConditions();
     },
     tagCommand(command) {
       this.$message('标签： ' + command);
+      this.condition.tag = command;
+      this.searchProblemListByConditions();
     },
-    serachProblemListByConditions() {
+    searchProblemListByConditions() {
       //查询题目list，条件：难度、状态、标签、题目或编号
       axios({
-        url: "/problems/serachProblemListByConditions",
+        url: "/problems/searchProblemListByConditions",
         method: "post",
         data: qs.stringify({
           difficulty: this.condition.difficulty,
-          state: this.condition.state,
+          status: this.condition.state,
           tag: this.condition.tag,
           keyword: this.condition.keyword,
+          user_id: this.$store.state.sLogin.users.id,
+          start: this.start,
         })
       }).then(response => {
-            console.log("serachProblemListByConditions:", response.data);
+            console.log("searchProblemListByConditions:", response.data);
             if (response.data) {
               this.problemList = response.data;
             } else {
@@ -145,11 +157,22 @@ export default {
             }
           },
           error => {
-            console.log("login请求失败", error);
+            console.log("searchProblemListByConditions请求失败", error);
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
 
     },
+  },
+  watch: {
+    keyword: {
+      immediate: true,
+      handler() {
+        setTimeout(() => {
+          this.condition.keyword = this.keyword;
+          this.searchProblemListByConditions();
+        }, 1000)
+      },
+    }
   },
   mounted() {
     //获取标签list
@@ -166,7 +189,8 @@ export default {
         error => {
           console.log("searchTagAll请求失败", error);
           messageTips(this, '啊哦，网络打了个盹', "error");
-        })
+        });
+    // this.searchProblemListByConditions();
   },
 
 }

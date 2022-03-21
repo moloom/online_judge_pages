@@ -61,10 +61,12 @@ export default {
                     //    登录失败，调用提示接口，需判断下用户是邮箱还是昵称登录。
                     if (response.data) {
                         stateObj.users.isLogin = true;
+                        stateObj.users.id=response.data.id;
                         stateObj.users.name = response.data.name;
                         stateObj.users.point = response.data.point;
                         stateObj.users.role = response.data.role;
                         stateObj.users.picture = response.data.picture;
+                        localStorage.setItem("id", stateObj.users.id);
                         localStorage.setItem("name", stateObj.users.name);
                         localStorage.setItem("isLogin", stateObj.users.isLogin);
                         localStorage.setItem("point", stateObj.users.point);
@@ -143,7 +145,7 @@ export default {
         },
     },
     state: {
-        users: {name: null, point: null, isLogin: false, role: null, picture: null,},
+        users: {id:null,name: null, point: null, isLogin: false, role: null, picture: null,},
         isAtLogin: true,//是否在登录界面，用于显示和隐藏界面。
     },
     getters: {},
