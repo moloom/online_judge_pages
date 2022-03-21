@@ -35,10 +35,10 @@ export default {
             value.email = value.email.trim();
             value.rPassword = value.rPassword.trim();
             value.checkPassword = value.checkPassword.trim();
-            let pFlag=true;
-            if (value.rPassword!==value.checkPassword){
+            let pFlag = true;
+            if (value.rPassword !== value.checkPassword) {
                 messageTips(value.thisObj, '两次密码输入不一致', "error");
-                pFlag=false;
+                pFlag = false;
             }
             let nameFlage = validateName(value.rName, value.thisObj);
             let emailFlag = validateEMail(value.email, value.thisObj);
@@ -57,7 +57,6 @@ export default {
                     password: value.lPassword,
                 })
             }).then(response => {
-                    console.log("response", response.data);
                     //   登录成功，三秒后转到主页，
                     //    登录失败，调用提示接口，需判断下用户是邮箱还是昵称登录。
                     if (response.data) {
@@ -66,6 +65,11 @@ export default {
                         stateObj.users.point = response.data.point;
                         stateObj.users.role = response.data.role;
                         stateObj.users.picture = response.data.picture;
+                        localStorage.setItem("name", stateObj.users.name);
+                        localStorage.setItem("isLogin", stateObj.users.isLogin);
+                        localStorage.setItem("point", stateObj.users.point);
+                        localStorage.setItem("role", stateObj.users.role);
+                        localStorage.setItem("picture", stateObj.users.picture);
                         value.thisObj.$router.push({
                             name: 'home',
                         });
@@ -93,7 +97,6 @@ export default {
                     verify_code: value.verifyCode,
                 })
             }).then(response => {
-                    console.log("response", response.data);
                     //   修改密码成功，回到登录界面，提示成功
                     if (response.data) {
                         messageTips(value.thisObj, '找回密码成功', "success");
@@ -119,16 +122,19 @@ export default {
                     password: value.rPassword,
                 })
             }).then(response => {
-                    console.log("response", response.data);
                     //   注册密码成功，回到登录界面，提示成功
-                    if (response.data) {
+                    if (response.data === "success") {
                         messageTips(value.thisObj, '注册成功', "success");
                         //回到登录界面
                         value.thisObj.isDisplay.splice(0, 3, false, true, false);
                         value.thisObj.atLogin = true;
                         value.thisObj.resetAllData();
-                    } else
+                    } else if (response.data === "emailError")
+                        messageTips(value.thisObj, '您的邮箱已被注册！', "warning");
+                    else if (response.data === "nameError")
                         messageTips(value.thisObj, '啊哦，不好意思，您的昵称已被注册！', "warning");
+                    else
+                        messageTips(value.thisObj, '啊哦，未知错误，请重试！', "error");
                 },
                 error => {
                     console.log("register", error);

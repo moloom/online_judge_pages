@@ -5,7 +5,7 @@
         <div>
           <el-header class="juzhong " style="width: 1150px;">
             <el-menu :default-active="activeIndex" class="el-menu-demo container" mode="horizontal"
-                     >
+            >
               <el-menu-item index="home" @click="toHome">首页</el-menu-item>
               <el-menu-item index="problems" @click="toProblemSet">题库</el-menu-item>
               <el-menu-item index="comment">讨论</el-menu-item>
@@ -68,6 +68,11 @@ export default {
   methods: {
     logout() {
       this.$store.state.sLogin.users.isLogin = false;
+      localStorage.setItem("name", "");
+      localStorage.setItem("isLogin", "");
+      localStorage.setItem("point", "");
+      localStorage.setItem("role", "");
+      localStorage.setItem("picture", "");
     },
     toLogin() {
       this.$router.push({
@@ -108,7 +113,18 @@ export default {
     },
   },
   mounted() {
-    this.updateActive();
+    this.updateActive();//更新导航栏高亮
+    //获取本地用户信息存储，防止刷新后用户信息丢失。
+    if (localStorage.getItem("name") !== "")
+      this.$store.state.sLogin.users.name = localStorage.getItem("name");
+    if (localStorage.getItem("isLogin") !== "")
+      this.$store.state.sLogin.users.isLogin = localStorage.getItem("isLogin");
+    if (localStorage.getItem("point") !== "")
+      this.$store.state.sLogin.users.point = localStorage.getItem("point");
+    if (localStorage.getItem("role") !== "")
+      this.$store.state.sLogin.users.role = localStorage.getItem("role");
+    if (localStorage.getItem("picture") !== "")
+      this.$store.state.sLogin.users.picture = localStorage.getItem("picture");
   },
   beforeUpdate() {
     this.updateActive();

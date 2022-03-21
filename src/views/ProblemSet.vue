@@ -5,26 +5,31 @@
         <el-dropdown size="medium" split-button type="primary" trigger="click" @command="difficultyCommand">
           难度
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="1">黄金糕</el-dropdown-item>
+            <el-dropdown-item command="1">简单</el-dropdown-item>
+            <el-dropdown-item command="2">中等</el-dropdown-item>
+            <el-dropdown-item command="3">困难</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>&nbsp;&nbsp;&nbsp;
         <el-dropdown size="medium" split-button type="primary" trigger="click" @command="stateCommand">
           状态
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="2">黄金糕</el-dropdown-item>
+            <el-dropdown-item command="1">未开始</el-dropdown-item>
+            <el-dropdown-item command="2">已解答</el-dropdown-item>
+            <el-dropdown-item command="3">尝试过</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>&nbsp;&nbsp;&nbsp;
         <el-dropdown size="medium" split-button type="primary" trigger="click" @command="tagCommand"
                      placement="bottom-start">
           标签
-          <el-dropdown-menu slot="dropdown" style="width: 250px;">
-            <el-dropdown-item command="3" style="float: left;" v-for="index in 12" :key="index">黄金糕</el-dropdown-item>
+          <el-dropdown-menu slot="dropdown" style="width: 200px;">
+            <el-dropdown-item :command="t.id" style="float: left;" v-for="t in tagList" :key="t.id">{{ t.name }}
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>&nbsp;&nbsp;&nbsp;
 
         <el-input style="width: 27%;"
                   placeholder="搜索题目或编号"
-                  v-model="text"
+                  v-model="keyword"
                   prefix-icon="el-icon-search"
                   clearable>
         </el-input>
@@ -33,7 +38,7 @@
         </el-tooltip>&nbsp;&nbsp;
         <el-button type="success" size="small ">随机一题</el-button>
         <el-table
-            :data="tableData"
+            :data="problemList"
             stripe
             style="width: 100%">
           <el-table-column
@@ -79,29 +84,89 @@
 </template>
 
 <script>
+import axios from "axios";
+import qs from "qs";
+import {messageTips} from "@/utils/messageTip";
+
 export default {
   name: "ProblemSet",
   data() {
     return {
-      text: "",
       visible: false,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      },]
+      condition: {
+        difficulty: 0,
+        state: 0,
+        tag: 0,
+        keyword: "",
+      },
+      problemList: [{
+        id: '',
+        title: '',
+        point: '',
+        difficulty: '',
+        passRate: "",
+        submit_times: "",
+        submit_pass_times: "",
+      }],
+      tagList: [{
+        id: "",
+        name: '',
+        create_time: '',
+      }],
     }
   },
   methods: {
     difficultyCommand(command) { //command属性类似id，下拉框的中的选项的唯一标识。方法在点击下拉框下的选项触发
-      this.$message('click on item ' + command);
+      this.$message('难度： ' + command);
     },
     stateCommand(command) {
-      this.$message('click on item ' + command);
+      this.$message('状态： ' + command);
     },
     tagCommand(command) {
-      this.$message('click on item ' + command);
+      this.$message('标签： ' + command);
     },
+    serachProblemListByConditions() {
+      //查询题目list，条件：难度、状态、标签、题目或编号
+      axios({
+        url: "/problems/serachProblemListByConditions",
+        method: "post",
+        data: qs.stringify({
+          difficulty: this.condition.difficulty,
+          state: this.condition.state,
+          tag: this.condition.tag,
+          keyword: this.condition.keyword,
+        })
+      }).then(response => {
+            console.log("serachProblemListByConditions:", response.data);
+            if (response.data) {
+              this.problemList = response.data;
+            } else {
+              messageTips(this, '啊哦，请求题目List失败', "error");
+            }
+          },
+          error => {
+            console.log("login请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+
+    },
+  },
+  mounted() {
+    //获取标签list
+    axios({
+      url: "/problems/searchTagAll",
+      method: "post",
+    }).then(response => {
+          if (response.data) {
+            this.tagList = response.data;
+          } else {
+            messageTips(this, '啊哦，请求标签List失败', "error");
+          }
+        },
+        error => {
+          console.log("searchTagAll请求失败", error);
+          messageTips(this, '啊哦，网络打了个盹', "error");
+        })
   },
 
 }
