@@ -38,7 +38,7 @@
           <el-button class="clearButtonStyle" icon="el-icon-delete" @click="handleClose(-1,-1)"></el-button>
         </el-tooltip>&nbsp;&nbsp;
         <el-button type="success" size="small ">随机一题</el-button>
-        <hr>
+
         <div style="width: 80%;height: 45px;border: white solid 1px;padding-top: 10px;" v-show="tags.length">
           <el-tag disable-transitions="true"
                   v-for="(tag,index) in tags" style="margin: 0px 5px 0px 5px;"
@@ -53,7 +53,7 @@
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(233, 233, 233, 0.8)"
                   :data="problemList"
-                  stripe
+                  stripe fit="false" empty-text="暂无数据"
                   style="width: 100%">
           <el-table-column
               prop="id"
@@ -83,7 +83,7 @@
           <el-table-column
               prop="submit_pass_number"
               label="通过人数"
-              width="70px">
+              width="80px">
           </el-table-column>
         </el-table>
       </div>
@@ -226,8 +226,8 @@ export default {
           status: this.condition.state,
           tag: this.condition.tag,
           keyword: this.condition.keyword,
-          user_id: this.$store.state.sLogin.users.id,
-          start: this.start,
+          user_id: localStorage.getItem("id"),
+          start: this.condition.start,
         })
       }).then(response => {
             console.log("searchProblemListByConditions:", response.data);
