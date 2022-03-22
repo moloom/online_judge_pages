@@ -146,7 +146,7 @@ export default {
     },
     state: {
         users: {id:null,name: null, point: null, isLogin: false, role: null, picture: null,},
-        isAtLogin: true,//是否在登录界面，用于显示和隐藏界面。
+        isAtLogin: false,//是否在登录界面，用于显示和隐藏界面。
     },
     getters: {},
 }

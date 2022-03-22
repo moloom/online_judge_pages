@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 1200px; margin: 0 auto;" v-show="$store.state.sLogin.isAtLogin">
+    <div style="width: 1200px; margin: 0 auto;" v-show="$store.state.isAtNav">
       <el-container class="GlobleCenter">
         <div>
           <el-header class="juzhong " style="width: 1150px;">
@@ -49,7 +49,7 @@
       </el-container>
     </div>
     <router-view></router-view>
-    <Footer v-show="$store.state.sLogin.isAtLogin"></Footer>
+    <Footer v-show="!$store.state.sLogin.isAtLogin"></Footer>
   </div>
 </template>
 
@@ -95,6 +95,7 @@ export default {
     updateActive() {
       //设置当前路径所属的导航栏高亮
       let path = this.$router.currentRoute.fullPath;
+      let pathLength = path.length;
       const name = this.$router.currentRoute.name;
       if (name) {
         if (path !== "/") {
@@ -106,10 +107,11 @@ export default {
         } else this.activeIndex = "home";
       }
       //防止用户直接在地址栏输入login
-      if (path === 'login')
-        this.$store.state.sLogin.isAtLogin = false;
-      else
+      if (path === 'login' || (path.slice(0, 8) === 'problems' && pathLength == 11)) {
         this.$store.state.sLogin.isAtLogin = true;
+      } else {
+        this.$store.state.sLogin.isAtLogin = false
+      }
     },
   },
   mounted() {
@@ -125,6 +127,8 @@ export default {
       this.$store.state.sLogin.users.role = localStorage.getItem("role");
     if (localStorage.getItem("picture") !== "")
       this.$store.state.sLogin.users.picture = localStorage.getItem("picture");
+    if (localStorage.getItem("id") !== "")
+      this.$store.state.sLogin.users.id = localStorage.getItem("id");
   },
   beforeUpdate() {
     this.updateActive();

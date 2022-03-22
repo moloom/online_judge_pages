@@ -6,24 +6,35 @@ Vue.use(VueRouter)
 import Login from "@/views/Login";
 import Body from "@/views/Body";
 import ProblemSet from "@/views/ProblemSet";
+import SolutionProblem from "@/views/SolutionProblem";
 
 const router = new VueRouter({
     routes: [
         {
-            name:"home",
+            name: "home",
             path: "/",
             component: Body,
-            children: [
-            ]
+            children: []
         },
         {
-            name:"login",
+            name: "login",
             path: "/login",
             component: Login,
         },
         {
-            name:"problems",
-            path: "/problems",
+            name: "solution",
+            path: "/problems/:id/:statistics",
+            component: SolutionProblem,
+            props($route) {
+                return {
+                    id: $route.query.id,
+                    statistics: $route.query.statistics,
+                }
+            },
+        },
+        {
+            name: "problems",
+            path: "/problems/list",
             component: ProblemSet,
         },
     ]

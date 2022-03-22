@@ -1,5 +1,6 @@
 <template>
-  <div class="">
+  <div>
+    <!--    等下这里加一个v-show -->
     <div class="pd2">
       <div class="pd3">
         <el-dropdown size="medium" split-button type="primary" trigger="click" @command="difficultyCommand">
@@ -39,8 +40,9 @@
         </el-tooltip>&nbsp;&nbsp;
         <el-button type="success" size="small ">随机一题</el-button>
 
+        <!--  显示查询的条件 -->
         <div style="width: 80%;height: 45px;border: white solid 1px;padding-top: 10px;" v-show="tags.length">
-          <el-tag disable-transitions="true"
+          <el-tag :disable-transitions="true"
                   v-for="(tag,index) in tags" style="margin: 0px 5px 0px 5px;"
                   :key="tag.name"
                   closable @close="handleClose(index,tag.id)"
@@ -52,11 +54,11 @@
                   element-loading-text="拼命加载中"
                   element-loading-spinner="el-icon-loading"
                   element-loading-background="rgba(233, 233, 233, 0.8)"
-                  :data="problemList"
-                  stripe fit="false" empty-text="暂无数据"
+                  :data="problemList" v-on:row-click="toSolveProblem"
+                  stripe empty-text="暂无数据"
                   style="width: 100%">
           <el-table-column
-              prop="id"
+              prop="id" column-key="id"
               label="编号"
               width="70px">
           </el-table-column>
@@ -106,7 +108,7 @@ export default {
   name: "ProblemSet",
   data() {
     return {
-      tags: [{}],
+      tags: [{}],//清除条件用
       keywords: "",
       visible: false,
       loading: false,//加载条件
@@ -136,6 +138,17 @@ export default {
     }
   },
   methods: {
+    toSolveProblem(row) {
+      console.log("id------", row.id);
+      this.$store.state.sLogin.isAtLogin = true;//告诉别的组件，用户要去solution界面啦，不该出来的就不要出来啦
+      this.$router.push({
+        name: 'solution',
+        params: {
+          id: row.id,
+          statistics:null,
+        },
+      })
+    },
     handleClose(index, id) {
       this.loading = true;
       setTimeout(() => {
@@ -230,7 +243,6 @@ export default {
           start: this.condition.start,
         })
       }).then(response => {
-            console.log("searchProblemListByConditions:", response.data);
             if (response.data) {
               this.problemList = response.data;
             } else {
