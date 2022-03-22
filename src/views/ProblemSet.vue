@@ -22,25 +22,39 @@
                      placement="bottom-start">
           标签
           <el-dropdown-menu slot="dropdown" style="width: 200px;">
-            <el-dropdown-item :command="t.id" style="float: left;" v-for="t in tagList" :key="t.id">{{ t.name }}
+            <el-dropdown-item :command="[t.id,t.name]" style="float: left;" v-for="t in tagList" :key="t.id">
+              {{ t.name }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>&nbsp;&nbsp;&nbsp;
 
         <el-input style="width: 27%;"
                   placeholder="搜索题目或编号"
-                  v-model="keyword"
+                  v-model="keywords"
                   prefix-icon="el-icon-search"
                   clearable>
         </el-input>
         <el-tooltip class="item" effect="dark" content="清空搜索条件" placement="top-end">
-          <el-button class="clearButtonStyle" icon="el-icon-delete"></el-button>
+          <el-button class="clearButtonStyle" icon="el-icon-delete" @click="handleClose(-1,-1)"></el-button>
         </el-tooltip>&nbsp;&nbsp;
         <el-button type="success" size="small ">随机一题</el-button>
-        <el-table
-            :data="problemList"
-            stripe
-            style="width: 100%">
+        <hr>
+        <div style="width: 80%;height: 45px;border: white solid 1px;padding-top: 10px;" v-show="tags.length">
+          <el-tag disable-transitions="true"
+                  v-for="(tag,index) in tags" style="margin: 0px 5px 0px 5px;"
+                  :key="tag.name"
+                  closable @close="handleClose(index,tag.id)"
+                  :type="tag.type">
+            {{ tag.name }}
+          </el-tag>
+        </div>
+        <el-table v-loading="loading"
+                  element-loading-text="拼命加载中"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(233, 233, 233, 0.8)"
+                  :data="problemList"
+                  stripe
+                  style="width: 100%">
           <el-table-column
               prop="id"
               label="编号"
@@ -92,8 +106,10 @@ export default {
   name: "ProblemSet",
   data() {
     return {
-      keyword: "",
+      tags: [{}],
+      keywords: "",
       visible: false,
+      loading: false,//加载条件
       condition: {
         difficulty: 0,
         state: 0,
@@ -120,20 +136,85 @@ export default {
     }
   },
   methods: {
+    handleClose(index, id) {
+      this.loading = true;
+      setTimeout(() => {
+        //删除单个条件
+        if (id == 1)
+          this.condition.difficulty = 0;
+        if (id == 2)
+          this.condition.state = 0;
+        if (id == 3)
+          this.condition.tag = 0;
+        if (index != -1)
+          this.tags.splice(index, 1);
+        else {//清空所有条件
+          this.condition.difficulty = 0;
+          this.condition.status = 0;
+          this.condition.tag = 0;
+          this.condition.start = 0;
+          this.condition.keyword = "";
+          this.keywords = "";
+        }
+        this.searchProblemListByConditions();
+        this.loading = false;
+      }, 500);
+    },
     difficultyCommand(command) { //command属性类似id，下拉框的中的选项的唯一标识。方法在点击下拉框下的选项触发
-      this.$message('难度： ' + command);
-      this.condition.difficulty = command;
-      this.searchProblemListByConditions();
+      this.loading = true;
+      setTimeout(() => {
+        this.condition.difficulty = command;
+        for (var i = 0; i < this.tags.length; i++) {
+          //删除当前已有的同类条件
+          if (this.tags[i] != null && this.tags[i].id == 1) {
+            this.tags.splice(i, 1);
+          }
+        }
+        if (command == 1)
+          this.tags.push({id: 1, name: "简单", type: "success"});
+        else if (command == 2)
+          this.tags.push({id: 1, name: "中等", type: "success"});
+        else if (command == 3)
+          this.tags.push({id: 1, name: "困难", type: "success"});
+        this.searchProblemListByConditions();
+        this.loading = false;
+      }, 500);
     },
     stateCommand(command) {
-      this.$message('状态： ' + command);
-      this.condition.state = command;
-      this.searchProblemListByConditions();
+      this.loading = true;
+      setTimeout(() => {
+        this.condition.state = command;
+        for (var i = 0; i < this.tags.length; i++) {
+          //删除当前已有的同类条件
+          if (this.tags[i].id == 2) {
+            this.tags.splice(i, 1);
+          }
+        }
+        if (command == 1)
+          this.tags.push({id: 2, name: "未开始", type: ""})
+        else if (command == 2)
+          this.tags.push({id: 2, name: "已解答", type: ""})
+        else if (command == 3)
+          this.tags.push({id: 2, name: "尝试过", type: ""})
+        this.searchProblemListByConditions();
+        this.loading = false;
+      }, 500);
     },
     tagCommand(command) {
-      this.$message('标签： ' + command);
-      this.condition.tag = command;
-      this.searchProblemListByConditions();
+      this.loading = true;
+      console.log(command);
+      setTimeout(() => {
+        this.condition.tag = command[0];
+        for (var i = 0; i < this.tags.length; i++) {
+          //删除当前已有的同类条件
+          if (this.tags[i].id == 3) {
+            this.tags.splice(i, 1);
+          }
+        }
+        this.tags.push({id: 3, name: command[1], type: "success"})
+        this.searchProblemListByConditions();
+        this.loading = false;
+      }, 500);
     },
     searchProblemListByConditions() {
       //查询题目list，条件：难度、状态、标签、题目或编号
@@ -164,17 +245,21 @@ export default {
     },
   },
   watch: {
-    keyword: {
+    keywords: {
       immediate: true,
       handler() {
+        this.loading = true;
+        this.condition.keyword = this.keywords;
         setTimeout(() => {
-          this.condition.keyword = this.keyword;
           this.searchProblemListByConditions();
+          this.loading = false;
         }, 1000)
       },
     }
   },
   mounted() {
+    // this.loading = true;
+    this.tags.shift();//删除数组中默认值
     //获取标签list
     axios({
       url: "/problems/searchTagAll",
@@ -190,7 +275,7 @@ export default {
           console.log("searchTagAll请求失败", error);
           messageTips(this, '啊哦，网络打了个盹', "error");
         });
-    // this.searchProblemListByConditions();
+    // this.loading = false;
   },
 
 }
