@@ -36,8 +36,8 @@
       </div>
       <div class="problemExtractD1">
         <span>
-          <i v-show="!isFavorite" class="el-icon-star-off"></i>
-          <i v-show="isFavorite" class="el-icon-star-on"></i>&nbsp;&nbsp;收藏
+          <i v-show="!isFavorite" class="el-icon-star-off" @click="updateFavorite"></i>
+          <i v-show="isFavorite" class="el-icon-star-on" @click="updateFavorite"></i>&nbsp;&nbsp;收藏
         </span>
       </div>
       <div class="problemExtractD1">
@@ -91,8 +91,33 @@ export default {
       isFavorite: false,
     }
   },
+  methods: {
+    updateFavorite() {
+      axios({
+        url: "/problems/updateFavorite",
+        method: "post",
+        data: qs.stringify({
+          create_by: this.$store.state.sLogin.users.id,
+          problem_id: this.$route.params.id,
+          isFavorite: this.isFavorite,
+        })
+      }).then(response => {
+            if (response.data) {
+              this.isFavorite = !this.isFavorite;
+            } else {
+              if (this.isFavorite)
+                messageTips(this, '啊哦，取消收藏失败', "error");
+              else
+                messageTips(this, '啊哦，收藏失败', "error");
+            }
+          },
+          error => {
+            console.log("updateFavorite 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+  },
   mounted() {
-    console.log("ProblemStem  mounted");
     //初始时，拿到题目数据
     axios({
       url: "/problems/searchProblemById",
