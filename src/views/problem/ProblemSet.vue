@@ -145,7 +145,6 @@ export default {
         name: 'solution',
         params: {
           id: row.id,
-          statistics:null,
         },
       })
     },

@@ -1,5 +1,7 @@
 <template>
-<div style="height: 100%;width: 100%;background-color: #2c3e50"></div>
+  <div style="height: 100%;width: 100%;background-color: #909399">
+    stem
+  </div>
 </template>
 
 <script>

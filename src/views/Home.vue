@@ -95,7 +95,6 @@ export default {
     updateActive() {
       //设置当前路径所属的导航栏高亮
       let path = this.$router.currentRoute.fullPath;
-      let pathLength = path.length;
       const name = this.$router.currentRoute.name;
       if (name) {
         if (path !== "/") {
@@ -104,10 +103,12 @@ export default {
           if (index !== -1)
             path = path.slice(0, index);
           this.activeIndex = path;
+          if(path==="problem")
+            this.activeIndex="problems";
         } else this.activeIndex = "home";
       }
       //防止用户直接在地址栏输入login
-      if (path === 'login' || (path.slice(0, 8) === 'problems' && pathLength == 11)) {
+      if (path === 'login' || (path.slice(0, 8) === 'problems' )) {
         this.$store.state.sLogin.isAtLogin = true;
       } else {
         this.$store.state.sLogin.isAtLogin = false
@@ -132,6 +133,8 @@ export default {
   },
   beforeUpdate() {
     this.updateActive();
+  },
+  watch: {
   },
 }
 </script>
