@@ -5,14 +5,21 @@
       <textarea ref="textarea"></textarea>
 
     </div>
-    <div style="width: 200px;float: left;margin-left: 50px;">
+    <div style="width: 150px;float: left;margin-left: 30px;">
       <el-select v-model="mode" @change="changeMode" style="width: 150px;" size="medium">
         <el-option v-for="mode in modes" :key="mode.value" :label="mode.label" :value="mode.value">
         </el-option>
       </el-select>
     </div>
     <div style="width: 200px;float: right;margin-left: 50px;">
-      <el-button type="success" icon="el-icon-s-promotion" :loading="isLoading" @click="submitCode" style="width: 140px;">提交</el-button>
+      <el-button type="success" icon="el-icon-s-promotion" :loading="isLoading" @click="submitCode"
+                 style="width: 140px;">提交
+      </el-button>
+    </div>
+    <div style="width: 100px;float: right;margin-left: 20px;">
+      <el-button type="warning" icon="el-icon-receiving" @click="saveCode"
+                 style="width: 100px;">保存
+      </el-button>
     </div>
   </div>
 </template>
@@ -39,6 +46,9 @@ import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/selection/active-line.js'//当前行高亮
 //自动闭合
 import 'codemirror/addon/edit/closetag.js'
+import axios from "axios";
+import qs from "qs";
+import {messageTips} from "@/utils/messageTip";
 
 export default {
   name: "CodeEditor",
@@ -53,9 +63,9 @@ export default {
   },
   data() {
     return {
-      isLoading:false,//提交按钮是否在加载
+      isLoading: false,//提交按钮是否在加载
       // 内部真实的内容
-      code: 'public class Main { \n\tpublic static void main(String[] args) { \n\t\tSystem.out.println("Hello word!");\n \t}\n }',
+      code: "",
       // 默认的语法类型
       mode: 'Java',
       // 编辑器实例
@@ -81,43 +91,101 @@ export default {
       // 支持切换的语法高亮类型，对应 JS 已经提前引入
       // 使用的是 MIME-TYPE ，不过作为前缀的 text/ 在后面指定时写死了
       modes: [{
-        value: 'x-java',
-        label: 'Java'
-      }, {
         value: 'x-csrc',
         label: 'C'
-      },],
+      }, {
+        value: 'x-java',
+        label: 'Java'
+      }],
     };
   },
   created() {
+    //加载codeMirror编译器
     this.open = true;
     this.$nextTick(function () {
       this._initialize();
     });
+    this.getCode();
   },
   methods: {
-    submitCode(){
-      this.isLoading=true;
-      setTimeout(()=>{
-        //axios请求
-        this.isLoading=false;
-      },900);
+    //提交代码
+    submitCode() {
+      this.isLoading = true;
+      console.log(this.coder.getValue());
+      //axios请求
+      setTimeout(() => {
+
+        this.isLoading = false;
+      }, 1000);
+    },
+    //保存代码
+    saveCode() {
+      let language = 0;
+      if (this.mode === "Java")
+        language = 2;
+      else if (this.mode === "C")
+        language = 1;
+      else language = 3;//Text文本类型
+      console.log(this.coder.getValue());
+      //axios请求
+      axios({
+        url: "/problems/saveCode",
+        method: "post",
+        data: qs.stringify({
+          user_id: this.$store.state.sLogin.users.id,
+          problem_id: this.$route.params.id,
+          code: this.coder.getValue(),
+          language: language,
+        })
+      }).then(response => {
+            if (response.data)
+              messageTips(this, '代码保存成功!', "success");
+            else
+              messageTips(this, '啊哦，代码保存失败!', "error");
+          },
+          error => {
+            console.log("saveCode 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+    //初始化时，获取用户上次保存的代码
+    getCode() {
+      axios({
+        url: "/problems/getCode",
+        method: "post",
+        data: qs.stringify({
+          user_id: localStorage.getItem("id"),//这里必须用本地存储，因为这时，store里还没有id值
+          problem_id: this.$route.params.id,
+        })
+      }).then(response => {
+            if (response.data != null) {
+              //更新代码
+              this.code = response.data.code;
+              this.coder.setValue(this.code);
+              //更新语言
+              this.mode = this.modes[response.data.language - 1].label;
+              this.changeMode(this.modes[response.data.language - 1].value);
+            } else messageTips(this, '拉取代码失败', "error");
+          },
+          error => {
+            console.log("getCode 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          }
+      )
     },
     // 初始化
     _initialize() {
       // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
       this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
       // 编辑器赋值
-      this.coder.setValue(this.value || this.code)
-
+      // this.coder.setValue( this.code)
       // 支持双向绑定
-      this.coder.on('change', (coder) => {
-        this.code = coder.getValue()
-
-        if (this.$emit) {
-          this.$emit('input', this.code)
-        }
-      })
+      // this.coder.on('change', (coder) => {
+      //   this.code = coder.getValue();
+      //   if (this.$emit) {
+      //     this.$emit('input', this.code)
+      //   }
+      // })
       this.changeMode("x-java");
       // 尝试从父容器获取语法类型
       /*if (this.language) {
@@ -129,7 +197,8 @@ export default {
           this.mode = modeObj.label
         }
       }*/
-    },
+    }
+    ,
     // 获取当前语法类型
     _getLanguage(language) {
       // 在支持的语法类型列表中寻找传入的语法类型
@@ -142,10 +211,10 @@ export default {
         // 由于真实值可能不规范，例如 java 的真实值是 x-java ，所以讲 value 和 label 同时和传入语法进行比较
         return currentLabel === currentLanguage || currentValue === currentLanguage
       })
-    },
+    }
+    ,
     // 更改模式
     changeMode(val) {
-      console.log("====", val);
       // 修改编辑器的语法配置
       this.coder.setOption('mode', `text/${val}`)
 
@@ -154,7 +223,8 @@ export default {
 
       // 允许父容器通过以下函数监听当前的语法值
       this.$emit('language-change', label)
-    },
+    }
+    ,
 
   }
 };
