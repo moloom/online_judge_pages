@@ -1,7 +1,10 @@
 const {defineConfig} = require('@vue/cli-service')
 module.exports = defineConfig({
     transpileDependencies: true,
-    lintOnSave: false,//关闭语法检查
+    publicPath:"",
+    //关闭语法检查
+    lintOnSave: false,
+
     devServer: {
         // host:"localhost",
         // port:"8080",
@@ -13,5 +16,5 @@ module.exports = defineConfig({
         //         changeOrigin: true  //true代表跨域伪装，false表示原地址访问，默认为true
         //     },
         // },
-    },
+    }
 })
