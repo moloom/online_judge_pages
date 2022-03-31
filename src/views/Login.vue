@@ -95,6 +95,7 @@ export default {
     }
   },
   methods: {
+    //发送邮箱验证码，（找回密码界面用）
     sendVerifyCode() {
       this.$refs.emailId.blur();//失去焦点
       if (validateEMail(this.retrieveEmail, this)) {
@@ -117,11 +118,12 @@ export default {
             })
       }
     },
+    // 重置登录信息
     clearLoginInfo() {
-      // 重置登录信息
       this.lName = "";
       this.lPassword = "";
     },
+    //清空信息
     resetAllData() {
       this.rName = "";
       this.email = "";
@@ -134,24 +136,26 @@ export default {
       this.verifyCode = "";
       this.newPassword = "";
     },
+    //去注册按钮的移动方块操作
     toRegister() {
-      //去注册，移动方块
       this.classObj.transformLogin = false;
       this.classObj.transformRegister = true;
       this.isDisplay.splice(0, 3, true, false, false);
     },
+    //去登录按钮的移动方块的操作
     toLogin() {
-      //去登录，移动方块
       this.classObj.transformLogin = true;
       this.classObj.transformRegister = false;
       this.isDisplay.splice(0, 3, false, true, false);
       this.atLogin = true;
     },
+    //去找回密码按钮的移动方块的操作
     toRetrievePassword() {
       //使用数组的方法，让vue可以检测到数组变化，从而重新解析模板。
       this.isDisplay.splice(0, 3, false, false, true);
       this.atLogin = !this.atLogin;
     },
+    //关闭登录界面
     closeLogin() {
       this.$router.push({
         name: 'home',

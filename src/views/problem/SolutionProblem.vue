@@ -1,3 +1,4 @@
+<!--解题界面-->
 <template>
   <div :style="conheight">
     <div class="solution-left" style="border-right:rgb(230,230,230) solid 1px;border-top: rgb(230,230,230) 1px solid;">
@@ -6,7 +7,6 @@
         <el-tab-pane label="讨论" name="comment"></el-tab-pane>
         <el-tab-pane label="统计数据" name="statistics"></el-tab-pane>
         <el-tab-pane label="提交记录" name="submission"></el-tab-pane>
-
         <router-view></router-view>
       </el-tabs>
     </div>
