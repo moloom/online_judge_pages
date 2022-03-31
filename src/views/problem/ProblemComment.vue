@@ -2,63 +2,119 @@
   <div>
     <!--     高亮     <pre v-highlightjs="mdtext2"><code></code></pre>-->
 
-    <!-- 评论   -->
-    <div class="comment-box">
-      <!--  头像  -->
-      <div class="comment-image">
-        <el-image size="large"
-                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-image>
-      </div>
-      <!--  评论主体  -->
-      <div class="comment-body">
-        <div style="padding-bottom: 10px;"><strong>你大爷</strong></div>
-        <div>
-          <mavon-editor style="min-height: 100%;border: 0px; padding: 0px;margin: 0px;"
-                        :value="commentText"
-                        :external-link="externalLink"
-                        :toolbarsFlag="false"
-                        :boxShadow="false"
-                        :subfield="false"
-                        :editable="false"
-                        previewBackground="white"
-                        defaultOpen="preview"></mavon-editor>
+    <!-- 一级评论 -->
+    <div>
+      <div class="comment-box" v-for="cm in commentList" :key="cm.id">
+        <!--  头像  -->
+        <div class="comment-image">
+          <el-image size="large"
+                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-image>
         </div>
-        <div>
-          <el-button type="text">回复</el-button>
-          <!--   点赞  -->
-          <span style="margin-left: 30px;">
+        <!--  评论主体    -->
+        <div class="comment-body">
+          <div><strong>{{ cm.userName }}</strong></div>
+          <div>
+            <mavon-editor style="min-height: 100%;border: 0px; padding: 0px;margin: 0px;"
+                          :value="cm.text"
+                          :external-link="externalLink"
+                          :toolbarsFlag="false"
+                          :boxShadow="false"
+                          :subfield="false"
+                          :editable="false"
+                          previewBackground="white"
+                          defaultOpen="preview"></mavon-editor>
+          </div>
+          <div style="height: 30px;">
+            <span class="comment-time">{{ cm.create_time |timer }}</span>
+            <el-button type="text"
+                       @click="changeReply(2,'id',null,'姓名')"
+                       v-show="$route.params.id!=cm.id">回复
+            </el-button>
+            <!--   点赞  -->
+            <span style="margin-left: 30px;">
             <img @click="changeCommentGoodAndBad(1)" src="@/assets/svg/good.svg" v-show="!isGood">
             <img @click="changeCommentGoodAndBad(0)" src="@/assets/svg/good-block.svg" v-show="isGood">
-            <span style="margin-left: 10px;">0</span>
+            <span style="margin-left: 10px;">{{ cm.good }}</span>
           </span>
-          <!--   点踩  -->
-          <span style="margin-left: 30px;">
+            <!--   点踩  -->
+            <span style="margin-left: 30px;">
             <img @click="changeCommentGoodAndBad(0)" src="@/assets/svg/bad.svg" v-show="!isBad">
             <img @click="changeCommentGoodAndBad(-1)" src="@/assets/svg/bad-block.svg" v-show="isBad">
-            <span style="margin-left: 10px;">0</span>
+            <span style="margin-left: 10px;">{{ cm.bad }}</span>
           </span>
+          </div>
+          <!--   二级评论     -->
+          <div class="comment-box" style="margin-top: 20px;" v-for="cm2 in cm.commentChildList" :key="cm2.id">
+            <!--  头像  -->
+            <div class="comment-image">
+              <el-image size="large"
+                        src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-image>
+            </div>
+            <!--  评论主体    -->
+            <div class="comment-body">
+              <!--  标题行    -->
+              <div>
+                <strong>{{ cm2.userName }}</strong>
+                <span>&nbsp;&nbsp;&nbsp;回复&nbsp;&nbsp;</span>
+                <el-link type="success" href="/#/problems/1/comment">@ {{ userNameOfComment }}</el-link>
+              </div>
+              <!--  md显示    -->
+              <div>
+                <mavon-editor style="min-height: 100%;border: 0px; padding: 0px;margin: 0px;"
+                              :value="cm2.text"
+                              :external-link="externalLink"
+                              :toolbarsFlag="false"
+                              :boxShadow="false"
+                              :subfield="false"
+                              :editable="false"
+                              previewBackground="white"
+                              defaultOpen="preview"></mavon-editor>
+              </div>
+              <!--  回复的相关信息    -->
+              <div style="height: 30px;">
+                <span class="comment-time">{{ cm2.create_time |timer }}</span>
+                <el-button type="text"
+                           @click="changeReply(3,'id1','id2','姓名2')"
+                           v-show="$route.params.id!=cm.id">回复
+                </el-button>
+                <!--   点赞  -->
+                <span style="margin-left: 30px;">
+                <img @click="changeCommentGoodAndBad(1)" src="@/assets/svg/good.svg" v-show="!isGood">
+                <img @click="changeCommentGoodAndBad(0)" src="@/assets/svg/good-block.svg" v-show="isGood">
+                <span style="margin-left: 10px;">{{ cm2.good }}</span>
+              </span>
+                <!--   点踩  -->
+                <span style="margin-left: 30px;">
+                <img @click="changeCommentGoodAndBad(0)" src="@/assets/svg/bad.svg" v-show="!isBad">
+                <img @click="changeCommentGoodAndBad(-1)" src="@/assets/svg/bad-block.svg" v-show="isBad">
+                <span style="margin-left: 10px;">{{ cm2.bad }}</span>
+              </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>2022-03-31 04:00:50</div>
       </div>
     </div>
-
     <!--评论编辑器-->
-    <div style="clear: left;padding: 100px 0;">
+    <div style="clear: left;padding: 60px 0px 0px 0px;">
       <mavon-editor :boxShadow="false"
-                    :subfield="true"
+                    :subfield="false"
                     :external-link="externalLink"
-                    style="padding-right: 50px;min-height: 500px;"
+                    style="padding-right: 50px;min-height: 380px;border: 2px solid #ebeef1;"
                     :toolbars="toolbars"
                     v-model="commentText"
                     :ishljs="true"></mavon-editor>
     </div>
-
-    <!--按钮-->
-    <div style="float: right;margin:0px 50px 80px 0px;">
-      <el-button type="primary" icon="el-icon-edit">回复</el-button>
+    <!--  显示当前正在回复谁  -->
+    <div class="comment-tip">
+      <el-tooltip class="item" effect="light" content="点击这里清除 @" placement="top-start">
+        <span @click="cancelReply">你当前正在回复<strong>{{ reply.name }}</strong></span>
+      </el-tooltip>
     </div>
-    <!-- 也可以直接写内容在标签中 -->
-    <!--    <pre v-highlightjs><code class="javascript">const s = new Date().toString()</code></pre>-->
+    <!--按钮-->
+    <div style="float: right;margin:0px 50px 30px 0px;">
+      <el-button type="primary" icon="el-icon-edit" @click="addComment">发表</el-button>
+    </div>
   </div>
 </template>
 
@@ -67,20 +123,21 @@ import {marked} from "marked";
 import axios from "axios";
 import qs from "qs";
 import {messageTips} from "@/utils/messageTip";
-// import 'github-markdown-css'
-// # 在使用内容显示的标签加上class="markdown-body"
+
 export default {
   name: "ProblemComment",
   data() {
     return {
       isGood: false,
       isBad: false,
-      commentList: [{}],
-      commentText: "```java\npublic class Main {\n" +
-          "\tpublic static void main(String[] args) {\n" +
-          "\t\tSystem.out.println(\"Hello word!\");\n" +
-          " \t}\n" +
-          " }\n```",
+      reply: {  //假设A回复B，这里存的就是B的信息
+        first_comment_id: null,
+        second_comment_id: null,
+        level: 1,
+        name: "...",
+      },
+      commentList: [],
+      commentText: "",
       toolbars: {
         bold: true, // 粗体
         italic: true, // 斜体
@@ -94,9 +151,9 @@ export default {
         ol: true, // 有序列表
         ul: true, // 无序列表
         link: true, // 链接
-        imagelink: true, // 图片链接
+        imagelink: false, // 图片链接
         code: true, // code
-        table: true, // 表格
+        table: false, // 表格
         fullscreen: true, // 全屏编辑
         readmodel: true, // 沉浸式阅读
         htmlcode: true, // 展示html源码
@@ -128,6 +185,21 @@ export default {
     };
   },
   methods: {
+    //取消回复
+    cancelReply() {
+      this.first_comment_id = null;
+      this.second_comment_id = null;
+      this.reply.name = "...";
+      this.reply.level = 1;
+    },
+    //点击回复所执行的操作
+    changeReply(level, id1, id2, name) {
+      this.reply.level = level;
+      this.reply.first_comment_id = id1;
+      this.reply.second_comment_id = id2;
+      this.reply.name = name;
+    },
+    //修改点赞或点赞
     changeCommentGoodAndBad(number) {
       // 根据number值来辨别要做什么工作，
       //值为1：是点赞操作，需要添加一条点赞记录，值为0：是取消点赞或点踩操作，直接删除数据库中的点赞或点踩信息就行
@@ -176,9 +248,55 @@ export default {
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
     },
+    //添加回复
+    addComment() {
+      axios({
+        url: "/comment/insertComment",
+        method: "post",
+        data: qs.stringify({
+          user_id: this.$store.state.sLogin.users.id,
+          problem_id: this.$route.params.id,
+          text: this.commentText,
+          level: this.reply.level,
+          first_comment_id: this.reply.first_comment_id,
+          second_comment_id: this.reply.second_comment_id,
+          comment_id: this.reply.id,
+        })
+      }).then(response => {
+            if (response.data) {
+              let tmpName = null;
+              if (this.reply.level == 1)
+                tmpName = null;
+              //如果level为1，执行下面的操作，如果是2或3，需把下面的集合挂载到相应的评论上
+              //没写查询评论集合
+              this.commentList.push({
+                user_id: this.$store.state.sLogin.users.id,
+                problem_id: this.$route.params.id,
+                text: this.commentText,
+                level: this.reply.level,
+                first_comment_id: this.reply.first_comment_id,
+                second_comment_id: this.reply.second_comment_id,
+                comment_id: this.reply.id,
+                good: 0,
+                bad: 0,
+                userName: this.$store.state.sLogin.users.name,
+                userNameOfComment: tmpName,
+                commentChildList: null,
+              });
+              this.commentText = "";
+            } else {
+              messageTips(this, '啊哦，网络走丢啦!', "warning");
+            }
+          },
+          error => {
+            console.log("insertComment 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
 
   },
   mounted() {
+    console.log(this.commentList);
     marked.setOptions({
       // highlight: (code) => VueHighlightJS.highlightAuto(code).value
     })
@@ -189,7 +307,7 @@ export default {
 
 <style>
 .comment-box {
-  margin-top: 60px;
+  margin-top: 30px;
   display: flex;
   flex-direction: row;
 }
@@ -213,90 +331,19 @@ export default {
   flex-grow: 18;
 }
 
-/*!
-  Theme: GitHub
-  Description: Light theme as seen on github.com
-  Author: github.com
-  Maintainer: @Hirse
-  Updated: 2021-05-15
-
-  Outdated base version: https://github.com/primer/github-syntax-light
-  Current colors taken from GitHub's CSS
-*/
-pre code.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 1em
+.comment-tip {
+  height: 30px;
+  width: 100%;
+  font-family: "Hiragino Sans GB";
+  margin-left: 50px;
+  color: #606266;
+  font-size: 14px;
+  line-height: 37px;
 }
 
-code.hljs {
-  padding: 3px 5px
+.comment-time {
+  margin-right: 20px;
+  color: #a7aab2;
 }
 
-.hljs {
-  color: #24292e;
-  background: #fff
-}
-
-.hljs-doctag, .hljs-keyword, .hljs-meta .hljs-keyword, .hljs-template-tag, .hljs-template-variable, .hljs-type, .hljs-variable.language_ {
-  color: #d73a49
-}
-
-.hljs-title, .hljs-title.class_, .hljs-title.class_.inherited__, .hljs-title.function_ {
-  color: #6f42c1
-}
-
-.hljs-attr, .hljs-attribute, .hljs-literal, .hljs-meta, .hljs-number, .hljs-operator, .hljs-selector-attr, .hljs-selector-class, .hljs-selector-id, .hljs-variable {
-  color: #005cc5
-}
-
-.hljs-meta .hljs-string, .hljs-regexp, .hljs-string {
-  color: #660e7a;
-  /*color: green;*/
-}
-
-.hljs-built_in, .hljs-symbol {
-  color: #e36209
-}
-
-.hljs-code, .hljs-comment, .hljs-formula {
-  color: #6a737d
-}
-
-.hljs-name, .hljs-quote, .hljs-selector-pseudo, .hljs-selector-tag {
-  color: #22863a;
-}
-
-.hljs-subst {
-  color: #24292e
-}
-
-.hljs-section {
-  color: #005cc5;
-  font-weight: 700
-}
-
-.hljs-bullet {
-  color: #735c0f
-}
-
-.hljs-emphasis {
-  color: #24292e;
-  font-style: italic
-}
-
-.hljs-strong {
-  color: #24292e;
-  font-weight: 700
-}
-
-.hljs-addition {
-  color: #22863a;
-  background-color: #f0fff4
-}
-
-.hljs-deletion {
-  color: #b31d28;
-  background-color: #ffeef0
-}
 </style>
