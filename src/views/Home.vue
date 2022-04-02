@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="$store.state.fullscreenLoading">
     <div style="width: 1200px; margin: 0 auto;" v-show="$store.state.isAtNav">
       <el-container class="GlobleCenter">
         <div>
@@ -8,8 +8,9 @@
             >
               <el-menu-item index="home" @click="toHome">首页</el-menu-item>
               <el-menu-item index="problems" @click="toProblemSet">题库</el-menu-item>
-              <el-menu-item index="comment">讨论</el-menu-item>
-              <el-menu-item index="bisai">比赛</el-menu-item>
+              <el-menu-item index="comment" @click="toCommentSet">讨论</el-menu-item>
+              <el-menu-item index="submission" @click="toSubmission">提交记录</el-menu-item>
+              <el-menu-item index="ranking">排行榜</el-menu-item>
               <el-menu-item
                   style="float: right;"
                   @click="toLogin"
@@ -23,7 +24,7 @@
                 <template slot="title">{{ $store.state.sLogin.users.name }}</template>
                 <el-menu-item index="5-1">积分值：{{ $store.state.sLogin.users.point }}</el-menu-item>
                 <el-menu-item index="5-2">个人设置</el-menu-item>
-                <el-menu-item index="5-3">提交记录</el-menu-item>
+                <el-menu-item index="5-3" @click="toSubmission">提交记录</el-menu-item>
                 <el-menu-item index="5-4">个人设置</el-menu-item>
                 <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
@@ -68,11 +69,12 @@ export default {
   methods: {
     logout() {
       this.$store.state.sLogin.users.isLogin = false;
-      localStorage.setItem("name", "");
-      localStorage.setItem("isLogin", "");
-      localStorage.setItem("point", "");
-      localStorage.setItem("role", "");
-      localStorage.setItem("picture", "");
+      localStorage.removeItem("name");
+      localStorage.removeItem("isLogin");
+      localStorage.removeItem("point");
+      localStorage.removeItem("role");
+      localStorage.removeItem("picture");
+      localStorage.removeItem("id");
     },
     toLogin() {
       this.$router.push({
@@ -84,11 +86,22 @@ export default {
         name: 'home',
       })
     },
+    toSubmission() {
+      this.$router.push({
+        name: 'submission',
+      })
+    },
+    toCommentSet() {
+      this.$router.push({
+        name: 'comments',
+      })
+    },
     toProblemSet() {
       this.$router.push({
         name: 'problems',
       })
     },
+    //导航栏的搜索功能实现
     search() {
       console.log("search、search、search");
     },
@@ -103,15 +116,20 @@ export default {
           if (index !== -1)
             path = path.slice(0, index);
           this.activeIndex = path;
-          if(path==="problem")
-            this.activeIndex="problems";
+          if (path === "problem")
+            this.activeIndex = "problems";
         } else this.activeIndex = "home";
       }
-      //防止用户直接在地址栏输入login
-      if (path === 'login' || (path.slice(0, 8) === 'problems' )) {
+      //防止用户直接在地址栏输入login时登录界面不能全屏显示
+      if (path === 'login') {
+        this.$store.state.sLogin.isAtLogin = true;
+        this.$store.state.isAtNav = false;
+      } else if (path.slice(0, 8) === 'problems') {
+        //在刷题时，关闭底栏
         this.$store.state.sLogin.isAtLogin = true;
       } else {
-        this.$store.state.sLogin.isAtLogin = false
+        this.$store.state.sLogin.isAtLogin = false;
+        this.$store.state.isAtNav = true;
       }
     },
   },
@@ -134,8 +152,7 @@ export default {
   beforeUpdate() {
     this.updateActive();
   },
-  watch: {
-  },
+  watch: {},
 }
 </script>
 

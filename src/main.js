@@ -18,8 +18,9 @@ Vue.use(VueHighlightJS)
 //引入日期格式工具
 import dayjs from '@/utils/dayjs.min'
 Vue.filter("timer",function(value){
-    return dayjs(value).format("YYYY-MM-DD HH:mm");
+    return dayjs(value).format("YYYY-MM-DD HH:mm:ss");
 })
+
 Vue.use(ElementUI);
 axios.defaults.baseURL = 'http://localhost:8888';
 // axios.defaults.withCredentials=false;

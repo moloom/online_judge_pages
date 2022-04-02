@@ -11,6 +11,11 @@ import ProblemStatistics from "@/views/problem/ProblemStatistics";
 import ProblemComment from "@/views/problem/ProblemComment";
 import ProblemSubmission from "@/views/problem/ProblemSubmission";
 import ProblemStem from "@/views/problem/ProblemStem";
+import SubmissionMain from "@/views/submission/SubmissionMain";
+import submissionDetail from "@/views/submission/SubmissionDetail";
+import submissionSet from "@/views/submission/SubmissionSet";
+import CommentMain from "@/views/comment/CommentMain";
+import CommentSet from "@/views/comment/CommentSet";
 
 const router = new VueRouter({
     routes: [
@@ -52,11 +57,47 @@ const router = new VueRouter({
                     component: ProblemComment,
                 },
                 {
-                    name: "submission",
+                    name: "problemSubmission",
                     path: "submission",
                     component: ProblemSubmission,
                 },
             ],
+        },
+        {
+            name: "submission",
+            path: "/submission",
+            redirect: "/submission/set",
+            component: SubmissionMain,
+            children: [
+                {
+                    name: "submissionSet",
+                    path: "set",
+                    component: submissionSet,
+                },
+                {
+                    name: "submissionDetail",
+                    path: "detail/:id/",
+                    component: submissionDetail,
+                }
+            ]
+        },
+        {
+            name: "comments",
+            path: "/comment",
+            redirect: "/comment/set",
+            component: CommentMain,
+            children: [
+                {
+                    name: "commentSet",
+                    path: "set",
+                    component: CommentSet,
+                },
+                /*{
+                    name: "submissionDetail",
+                    path: "detail/:id/",
+                    component: submissionDetail,
+                }*/
+            ]
         },
         {//防止用户在地址栏乱输入东西
             path: '*',

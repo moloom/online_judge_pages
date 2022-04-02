@@ -3,7 +3,7 @@
     <!--     高亮     <pre v-highlightjs="mdtext2"><code></code></pre>-->
 
     <!-- 一级评论 -->
-    <div v-loading.fullscreen.lock="fullscreenLoading">
+    <div>
       <div class="comment-box" v-for="(cm,index) in commentList" :key="cm.id">
         <!--  头像  -->
         <div class="comment-image">
@@ -139,7 +139,6 @@
 </template>
 
 <script>
-import {marked} from "marked";
 import axios from "axios";
 import qs from "qs";
 import {messageTips} from "@/utils/messageTip";
@@ -148,7 +147,6 @@ export default {
   name: "ProblemComment",
   data() {
     return {
-      fullscreenLoading: false,//是否显示加载
       goodAndBadInfo: {},//存放当前用户对评论的点赞点踩操作
       reply: {  //假设A回复B，这里存的就是B的信息
         first_comment_id: null,
@@ -330,6 +328,7 @@ export default {
       }).then(response => {
             if (response.data) {
               this.searchCommentListByProblemId();
+              this.searchGoodAndBadInfo();
               this.commentText = "";
             } else {
               messageTips(this, '啊哦，网络走丢啦!', "warning");
@@ -342,7 +341,7 @@ export default {
     },
     //获取评论数据
     searchCommentListByProblemId() {
-      this.fullscreenLoading = true;
+      this.$store.state.fullscreenLoading = true;
       axios({
         url: "/comment/searchCommentListByProblemId",
         method: "post",
@@ -362,7 +361,7 @@ export default {
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
       setTimeout(() => {
-        this.fullscreenLoading = false;
+        this.$store.state.fullscreenLoading = false;
       }, 1300);
     },
     //查询当前用户对当前题目中的评论的点赞点踩情况
@@ -389,13 +388,10 @@ export default {
     },
   },
   mounted() {
+    //初始化点赞点踩数据
     this.searchGoodAndBadInfo();
     //初始化评论数据
     this.searchCommentListByProblemId();
-    marked.setOptions({
-      // highlight: (code) => VueHighlightJS.highlightAuto(code).value
-    })
-    // this.mdText();
   }
 }
 </script>

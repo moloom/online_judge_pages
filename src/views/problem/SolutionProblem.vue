@@ -6,7 +6,7 @@
         <el-tab-pane label="题面" name="solution"></el-tab-pane>
         <el-tab-pane label="讨论" name="comment"></el-tab-pane>
         <el-tab-pane label="统计数据" name="statistics"></el-tab-pane>
-        <el-tab-pane label="提交记录" name="submission"></el-tab-pane>
+        <el-tab-pane label="提交记录" name="problemSubmission"></el-tab-pane>
         <router-view></router-view>
       </el-tabs>
     </div>
@@ -30,7 +30,7 @@ export default {
         height: '',
       },
       index: 0,
-      routeName: ["solution", "comment", "statistics", "submission"],
+      routeName: ["solution", "comment", "statistics", "problemSubmission"],
     }
   },
   methods: {
@@ -69,7 +69,6 @@ export default {
     this.updateActive();
   },
   beforeUpdate() {
-    console.log("hello i'm  beforeUpdate");
   },
 }
 </script>
