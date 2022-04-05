@@ -30,7 +30,7 @@
               </el-submenu>
               <el-menu-item style="float: right;">
                 <el-input v-model="searchText" style="width: 80%;"
-                          placeholder="搜索..." size="small"></el-input>&nbsp;
+                          placeholder="搜索题目..." size="small"></el-input>&nbsp;
                 <!--              <i class="el-icon-search"></i>-->
                 <svg t="1647660034084" class="icon" viewBox="0 0 1024 1024" version="1.1"
                      xmlns="http://www.w3.org/2000/svg" p-id="2969" width="27" @click="search">

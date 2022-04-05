@@ -240,7 +240,7 @@ h2 {
 
 .example {
   width: 95%;
-  background-color: #d3b7d8;
+  background-color: rgba(211, 183, 216, 0.87);
   padding: 10px 15px;
 }
 

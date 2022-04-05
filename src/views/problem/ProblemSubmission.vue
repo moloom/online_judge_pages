@@ -13,9 +13,12 @@
         <td style="width: 19%;">提交时间</td>
       </tr>
 
-      <tr v-for="(sl,index) in submissionList" :key="sl.id">
+      <tr v-for="sl in submissionList" :key="sl.id">
         <td>
-          <el-link :underline="false" class="a-color">{{ sl.id }}</el-link>
+          <el-link :underline="false" class="a-color" @click="toSubmissionDetail(sl.id,sl.user_id)">{{
+              sl.id
+            }}
+          </el-link>
         </td>
         <td>{{ sl.userName }}</td>
         <td>
@@ -41,7 +44,7 @@ export default {
   data() {
     return {
       submissionList: [],
-      classArr: ["","green", "red", "yellow", "grey", "orange", "orange"],
+      classArr: ["", "green", "red", "yellow", "grey", "orange", "orange"],
     }
   },
   methods: {
@@ -67,6 +70,18 @@ export default {
             console.log("searchSubmissionListByMap 请求失败", error);
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
+    },
+    // 转去提交详情界面
+    toSubmissionDetail(id, user_id) {
+      if (user_id == localStorage.getItem("id"))
+        this.$router.push({
+          name: 'submissionDetail',
+          params: {
+            id: id,
+          },
+        })
+      else
+        messageTips(this, '访问受限', "warning");
     },
   },
   created() {

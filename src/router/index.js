@@ -16,6 +16,7 @@ import submissionDetail from "@/views/submission/SubmissionDetail";
 import submissionSet from "@/views/submission/SubmissionSet";
 import CommentMain from "@/views/comment/CommentMain";
 import CommentSet from "@/views/comment/CommentSet";
+import CommentDetail from "@/views/comment/CommentDetail";
 
 const router = new VueRouter({
     routes: [
@@ -92,11 +93,11 @@ const router = new VueRouter({
                     path: "set",
                     component: CommentSet,
                 },
-                /*{
-                    name: "submissionDetail",
+                {
+                    name: "commentDetail",
                     path: "detail/:id/",
-                    component: submissionDetail,
-                }*/
+                    component: CommentDetail,
+                }
             ]
         },
         {//防止用户在地址栏乱输入东西

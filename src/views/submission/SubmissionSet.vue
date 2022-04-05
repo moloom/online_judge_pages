@@ -72,7 +72,7 @@ export default {
     },
     // 转去提交详情界面
     toSubmissionDetail(id, user_id) {
-      if (user_id === localStorage.getItem("id"))
+      if (user_id == localStorage.getItem("id"))
         this.$router.push({
           name: 'submissionDetail',
           params: {

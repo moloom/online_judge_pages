@@ -30,7 +30,7 @@ import CodeMirror from 'codemirror'
 // 核心样式
 import 'codemirror/lib/codemirror.css'
 // 引入主题后还需要在 options 中指定主题才会生效
-import 'codemirror/theme/eclipse.css'
+// import 'codemirror/theme/eclipse.css'
 
 // codemirror 官方其实支持通过 /addon/mode/loadmode.js 和 /mode/meta.js 来实现动态加载对应语法高亮库
 // 但 vue 貌似没有无法在实例初始化后再动态加载对应 JS ，所以此处才把对应的 JS 提前引入
@@ -81,8 +81,8 @@ export default {
         autoCloseBrackets: true,
         // 缩进格式
         tabSize: 4,
-        // 主题，对应主题库 JS 需要提前引入
-        theme: 'eclipse',
+        // 主题，对应主题库 JS 需要提前引入 ，不引入就是默认的
+        // theme: 'eclipse',
         // 显示行号
         lineNumbers: true,
         line: true,
@@ -160,11 +160,16 @@ export default {
       }).then(response => {
             if (response.data != null) {
               //更新代码
-              this.code = response.data.code;
+              if (response.data.code == null)
+                this.code = "";
+              else
+                this.code = response.data.code;
               this.coder.setValue(this.code);
               //更新语言
-              this.mode = this.modes[response.data.language - 1].label;
-              this.changeMode(this.modes[response.data.language - 1].value);
+              if (response.data.language != null) {
+                this.mode = this.modes[response.data.language - 1].label;
+                this.changeMode(this.modes[response.data.language - 1].value);
+              }
             } else messageTips(this, '拉取代码失败', "error");
           },
           error => {

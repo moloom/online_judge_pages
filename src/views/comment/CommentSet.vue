@@ -18,7 +18,7 @@
         <!--  评论主体    -->
         <div class="comment-body">
           <span><strong>{{ c.userName }}</strong></span>
-          <el-link style="padding-left: 20px;color: #3a8ee6;padding-bottom: 4px;">题目：{{ c.problemTitle }}</el-link>
+          <el-link style="padding-left: 20px;color: #3a8ee6;padding-bottom: 4px;" @click="toSolveProblem(c.problem_id)">题目：{{ c.problemTitle }}</el-link>
           <div>
             <mavon-editor style="min-height: 100%;border: 0px; padding: 0px;margin: 0px;"
                           :value="c.text"
@@ -123,7 +123,7 @@ export default {
       this.searchCommentListRecently(id, 0);
       this.searchCommentCountRecently(id);
     },
-    //切换页数
+    //翻页
     changePage(pageNumber) {
       this.$store.state.fullscreenLoading = true;
       console.log("change", pageNumber);
@@ -132,6 +132,16 @@ export default {
       if (this.isMyComment)
         user_id = localStorage.getItem("id");
       this.searchCommentListRecently(user_id, start);
+    },
+    //转去题目解题界面
+    toSolveProblem(id) {
+      this.$store.state.sLogin.isAtLogin = true;//告诉别的组件，用户要去solution界面啦，footer就不要出来啦
+      this.$router.push({
+        name: 'solution',
+        params: {
+          id: id,
+        },
+      })
     },
   },
   created() {
