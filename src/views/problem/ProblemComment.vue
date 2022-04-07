@@ -323,7 +323,6 @@ export default {
           level: this.reply.level,
           first_comment_id: this.reply.first_comment_id,
           second_comment_id: this.reply.second_comment_id,
-          comment_id: this.reply.id,
         })
       }).then(response => {
             if (response.data) {
