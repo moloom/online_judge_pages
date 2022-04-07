@@ -8,9 +8,9 @@
       </div>
       <!-- 排行榜 -->
       <div class="ranking">
-        <div style="height: 300px;">热门讨论</div>
         <div style="height: 300px;">标签</div>
         <div style="height: 300px;">热门解题</div>
+        <div style="height: 300px;">积分达人</div>
       </div>
 
     </el-main>

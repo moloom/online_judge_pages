@@ -60,8 +60,8 @@ export default {
     return {
       isMyComment: false,
       commentList: [],
-      totalCount: 0,
-      currentPage: 1,
+      totalCount: 0,//分页用
+      currentPage: 1,//分页用
       externalLink: {
         markdown_css: () => '/md/github-markdown.min.css',
         // markdown_css: false,

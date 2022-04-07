@@ -1,7 +1,7 @@
 <!--主页左边的文字列表-->
 <template>
   <div>
-    <div style="vertical-align: middle;" v-for="(p,index) in 11" :key="index">
+    <div style="vertical-align: middle;" v-for="(p,index) in 1" :key="index">
       <el-row class="clearMarginBottom">
         <el-col :span="24">
           <div class="verticalCenter">
@@ -19,35 +19,21 @@
         </el-col>
       </el-row>
     </div>
-    <el-button type="primary" @click="testGet">点我get</el-button>
-    <el-button type="primary" @click="testGet2">点我get2</el-button>
   </div>
 </template>
 
 <script>
 
 import axios from "axios";
+
 export default {
   name: "HomeList",
+  data() {
+    return {
+    };
+  },
   methods: {
-    testGet() {
-      axios.get("/").then(
-          response => {
-            console.log("啦啦啦", response);
-          },
-          error => {
-            console.log("呜呜呜", error);
-          })
-    },
-    testGet2() {
-      axios.post("/user/logins").then(
-          response => {
-            console.log("llllll", response.data);
-          },
-          error => {
-            console.log("wwwwww", error);
-          })
-    },
+    //3个点赞数最高的讨论（只显示部分正文内容），三个
   },
 }
 </script>
