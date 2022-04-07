@@ -18,7 +18,9 @@
         <!--  评论主体    -->
         <div class="comment-body">
           <span><strong>{{ c.userName }}</strong></span>
-          <el-link style="padding-left: 20px;color: #3a8ee6;padding-bottom: 4px;" @click="toSolveProblem(c.problem_id)">题目：{{ c.problemTitle }}</el-link>
+          <el-link style="padding-left: 20px;color: #3a8ee6;padding-bottom: 4px;" @click="toSolveProblem(c.problem_id)">
+            题目：{{ c.problemTitle }}
+          </el-link>
           <div>
             <mavon-editor style="min-height: 100%;border: 0px; padding: 0px;margin: 0px;"
                           :value="c.text"
@@ -31,7 +33,8 @@
                           defaultOpen="preview"></mavon-editor>
           </div>
           <span class="comment-time">{{ c.create_time | timer }}</span>
-          <el-link style="padding-left: 10px;color: #21BA45;padding-bottom: 4px;">查看全文</el-link>
+          <el-link style="padding-left: 10px;color: #21BA45;padding-bottom: 4px;" @click="toCommentDetail(c.id)">查看全文
+          </el-link>
         </div>
       </div>
       <div class="pagination">
@@ -142,6 +145,15 @@ export default {
           id: id,
         },
       })
+    },
+    //转去评论详情界面
+    toCommentDetail(id) {
+      this.$router.push({
+        name: 'commentDetail',
+        params: {
+          id: id,
+        },
+      });
     },
   },
   created() {
