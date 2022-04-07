@@ -90,6 +90,14 @@
               width="80px">
           </el-table-column>
         </el-table>
+        <!--  分页  -->
+        <div class="pagination">
+          <el-pagination @current-change="changePage"
+                         layout="prev, pager, next"
+                         :current-page="currentPage"
+                         :total="totalCount">
+          </el-pagination>
+        </div>
       </div>
 
       <div class="sidebar">
@@ -110,10 +118,13 @@ export default {
   name: "ProblemSet",
   data() {
     return {
+      totalCount: 0,//分页用，总记录条数
+      currentPage: 1,//分页用，当前页数
       tags: [{}],//清除条件用
-      keywords: "",
+      keywords: "",//搜索条件
       visible: false,
       loading: false,//加载条件
+      //搜索条件
       condition: {
         difficulty: 0,
         state: 0,
@@ -141,7 +152,6 @@ export default {
   },
   methods: {
     toSolveProblem(row) {
-      console.log("id------", row.id);
       this.$store.state.sLogin.isAtLogin = true;//告诉别的组件，用户要去solution界面啦，不该出来的就不要出来啦
       this.$router.push({
         name: 'solution',
@@ -150,88 +160,78 @@ export default {
         },
       })
     },
+    //清空搜索条件
     handleClose(index, id) {
       this.loading = true;
-      setTimeout(() => {
-        //删除单个条件
-        if (id == 1)
-          this.condition.difficulty = 0;
-        if (id == 2)
-          this.condition.state = 0;
-        if (id == 3)
-          this.condition.tag = 0;
-        if (index != -1)
-          this.tags.splice(index, 1);
-        else {//清空所有条件
-          this.condition.difficulty = 0;
-          this.condition.status = 0;
-          this.condition.tag = 0;
-          this.condition.start = 0;
-          this.condition.keyword = "";
-          this.keywords = "";
-        }
-        this.searchProblemListByConditions();
-        this.loading = false;
-      }, 500);
+      //删除单个条件
+      if (id == 1)
+        this.condition.difficulty = 0;
+      if (id == 2)
+        this.condition.state = 0;
+      if (id == 3)
+        this.condition.tag = 0;
+      if (index != -1)
+        this.tags.splice(index, 1);
+      else {//清空所有条件
+        this.condition.difficulty = 0;
+        this.condition.status = 0;
+        this.condition.tag = 0;
+        this.condition.start = 0;
+        this.condition.keyword = "";
+        this.keywords = "";
+      }
+      this.searchProblemListByConditions();
     },
-    difficultyCommand(command) { //command属性类似id，下拉框的中的选项的唯一标识。方法在点击下拉框下的选项触发
+    //切换难度触发
+    difficultyCommand(command) {
+      //command属性类似id，下拉框的中的选项的唯一标识。方法在点击下拉框下的选项触发
       this.loading = true;
-      setTimeout(() => {
-        this.condition.difficulty = command;
-        for (var i = 0; i < this.tags.length; i++) {
-          //删除当前已有的同类条件
-          if (this.tags[i] != null && this.tags[i].id == 1) {
-            this.tags.splice(i, 1);
-          }
+      this.condition.difficulty = command;
+      for (let i = 0; i < this.tags.length; i++) {
+        //删除当前已有的同类条件
+        if (this.tags[i] != null && this.tags[i].id == 1) {
+          this.tags.splice(i, 1);
         }
-        if (command == 1)
-          this.tags.push({id: 1, name: "简单", type: "success"});
-        else if (command == 2)
-          this.tags.push({id: 1, name: "中等", type: "success"});
-        else if (command == 3)
-          this.tags.push({id: 1, name: "困难", type: "success"});
-        this.searchProblemListByConditions();
-        this.loading = false;
-      }, 500);
+      }
+      if (command == 1)
+        this.tags.push({id: 1, name: "简单", type: "success"});
+      else if (command == 2)
+        this.tags.push({id: 1, name: "中等", type: "success"});
+      else if (command == 3)
+        this.tags.push({id: 1, name: "困难", type: "success"});
+      this.searchProblemListByConditions();
     },
     stateCommand(command) {
       this.loading = true;
-      setTimeout(() => {
-        this.condition.state = command;
-        for (var i = 0; i < this.tags.length; i++) {
-          //删除当前已有的同类条件
-          if (this.tags[i].id == 2) {
-            this.tags.splice(i, 1);
-          }
+      this.condition.state = command;
+      for (let i = 0; i < this.tags.length; i++) {
+        //删除当前已有的同类条件
+        if (this.tags[i].id == 2) {
+          this.tags.splice(i, 1);
         }
-        if (command == 1)
-          this.tags.push({id: 2, name: "未开始", type: ""})
-        else if (command == 2)
-          this.tags.push({id: 2, name: "已解答", type: ""})
-        else if (command == 3)
-          this.tags.push({id: 2, name: "尝试过", type: ""})
-        this.searchProblemListByConditions();
-        this.loading = false;
-      }, 500);
+      }
+      if (command == 1)
+        this.tags.push({id: 2, name: "未开始", type: ""})
+      else if (command == 2)
+        this.tags.push({id: 2, name: "已解答", type: ""})
+      else if (command == 3)
+        this.tags.push({id: 2, name: "尝试过", type: ""})
+      this.searchProblemListByConditions();
     },
     tagCommand(command) {
       this.loading = true;
-      console.log(command);
-      setTimeout(() => {
-        this.condition.tag = command[0];
-        for (var i = 0; i < this.tags.length; i++) {
-          //删除当前已有的同类条件
-          if (this.tags[i].id == 3) {
-            this.tags.splice(i, 1);
-          }
+      this.condition.tag = command[0];
+      for (let i = 0; i < this.tags.length; i++) {
+        //删除当前已有的同类条件
+        if (this.tags[i].id == 3) {
+          this.tags.splice(i, 1);
         }
-        this.tags.push({id: 3, name: command[1], type: "success"})
-        this.searchProblemListByConditions();
-        this.loading = false;
-      }, 500);
+      }
+      this.tags.push({id: 3, name: command[1], type: "success"})
+      this.searchProblemListByConditions();
     },
+    //查询题目list，条件：难度、状态、标签、题目或编号
     searchProblemListByConditions() {
-      //查询题目list，条件：难度、状态、标签、题目或编号
       axios({
         url: "/problems/searchProblemListByConditions",
         method: "post",
@@ -256,6 +256,56 @@ export default {
           })
 
     },
+    //查询题目数量
+    searchProblemCountByConditions() {
+      this.loading = true;
+      axios({
+        url: "/problems/searchProblemCountByConditions",
+        method: "post",
+        data: qs.stringify({
+          difficulty: this.condition.difficulty,
+          status: this.condition.state,
+          tag: this.condition.tag,
+          keyword: this.condition.keyword,
+          user_id: localStorage.getItem("id"),
+        })
+      }).then(response => {
+            if (response.data) {
+              this.totalCount = response.data;
+            } else {
+              messageTips(this, '啊哦，请求题目数量失败', "error");
+            }
+          },
+          error => {
+            console.log("searchProblemCountByConditions 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+    //查看所有的标签
+    searchTagList() {
+      this.tags.shift();//删除数组中默认值
+      //获取标签list
+      axios({
+        url: "/problems/searchTagAll",
+        method: "post",
+      }).then(response => {
+            if (response.data) {
+              this.tagList = response.data;
+            } else {
+              messageTips(this, '啊哦，请求标签List失败', "error");
+            }
+          },
+          error => {
+            console.log("searchTagAll请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          });
+    },
+    //翻页
+    changePage(pageNumber) {
+      this.loading = true;
+      this.condition.start = (pageNumber - 1) * 10;
+      this.searchProblemListByConditions();
+    },
   },
   watch: {
     keywords: {
@@ -270,26 +320,21 @@ export default {
       },
     }
   },
-  mounted() {
-    // this.loading = true;
-    this.tags.shift();//删除数组中默认值
-    //获取标签list
-    axios({
-      url: "/problems/searchTagAll",
-      method: "post",
-    }).then(response => {
-          if (response.data) {
-            this.tagList = response.data;
-          } else {
-            messageTips(this, '啊哦，请求标签List失败', "error");
-          }
-        },
-        error => {
-          console.log("searchTagAll请求失败", error);
-          messageTips(this, '啊哦，网络打了个盹', "error");
-        });
-    // this.loading = false;
+  created() {
+    this.loading = true;
+    this.searchTagList();
+    this.searchProblemCountByConditions();
   },
+  mounted() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 700);
+  },
+  updated() {
+    setTimeout(() => {
+      this.loading = false;
+    }, 700);
+  }
 
 }
 </script>
