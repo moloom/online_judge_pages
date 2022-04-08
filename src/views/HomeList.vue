@@ -1,23 +1,27 @@
 <!--主页左边的文字列表-->
 <template>
   <div>
-    <div style="vertical-align: middle;" v-for="(p,index) in 1" :key="index">
+    <h2>公告</h2>
+    <div style="vertical-align: middle;" v-for="c in announcementList" :key="c.id">
       <el-row class="clearMarginBottom">
         <el-col :span="24">
           <div class="verticalCenter">
             <el-avatar size="large"
-                       src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            <span>&nbsp;&nbsp;&nbsp;我是题目标题 {{ index }}</span>
+                       :src="c.userPicture"></el-avatar>
+            <span>{{ c.userName }}：</span>
+            <h3 style="margin: 0px 2px">&nbsp;{{ c.title }}</h3>
+            <span class="time-style">{{ c.create_time | timer }}</span>
           </div>
         </el-col>
       </el-row>
-      <el-row class="clearMarginBottom">
-        <el-col :span="24">
-          <div class="grid-content bg-purple-light"><p>
-            saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货saoidhsaofdhnasd少时诵诗书是少时诵诗书2222222
-            1sdsadadasd是闪电发是货saoidhsaofdhnasd1sdsadadasd是闪电发是货s</p></div>
-        </el-col>
-      </el-row>
+      <div class="clearMarginBottom">
+        <div style="margin-left: 40px;">
+          <div class="grid-content ">{{ c.preview }}
+            <el-link @click="toAnnouncementDetail(c.id)"
+                style="color: #3a8ee6;font-size: 15px;margin-bottom: 3px;">...查看全文</el-link>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -25,20 +29,59 @@
 <script>
 
 import axios from "axios";
+import qs from "qs";
+import {messageTips} from "@/utils/messageTip";
 
 export default {
   name: "HomeList",
   data() {
     return {
+      announcementList: [],
     };
   },
   methods: {
-    //3个点赞数最高的讨论（只显示部分正文内容），三个
+    //查询点赞最多9条的评论
+    searchAnnouncement() {
+      axios({
+        url: "/rank/searchAnnouncement",
+        method: "post",
+      }).then(response => {
+            if (response.data) {
+              this.announcementList = response.data;
+            } else
+              messageTips(this, '啊哦，请求公告失败!', "warning");
+          },
+          error => {
+            console.log("searchAnnouncement 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+    //转去公告详情界面
+    toAnnouncementDetail(id){
+      this.$router.push({
+        name: 'announcementDetail',
+        params: {
+          id: id,
+        },
+      })
+    },
   },
+  created() {
+    this.searchAnnouncement();
+  }
 }
 </script>
 
 <style scoped>
+* {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+.time-style{
+  margin: 5px 0 0 20px;
+  color: #8e9aaf;
+  font-size: small;
+}
+
 .el-row {
   margin-bottom: 20px;
 
@@ -50,7 +93,7 @@ export default {
 }
 
 .clearMarginBottom {
-  margin-bottom: 0px;
+  margin: 0px;
 }
 
 .el-col {

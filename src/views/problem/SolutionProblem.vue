@@ -68,8 +68,6 @@ export default {
     this.getHeight();
     this.updateActive();
   },
-  beforeUpdate() {
-  },
 }
 </script>
 

@@ -17,6 +17,7 @@ import submissionSet from "@/views/submission/SubmissionSet";
 import CommentMain from "@/views/comment/CommentMain";
 import CommentSet from "@/views/comment/CommentSet";
 import CommentDetail from "@/views/comment/CommentDetail";
+import AnnouncementDetail from "@/views/AnnouncementDetail";
 
 const router = new VueRouter({
     routes: [
@@ -99,6 +100,11 @@ const router = new VueRouter({
                     component: CommentDetail,
                 }
             ]
+        },
+        {
+            name: "announcementDetail",
+            path: "/announcementDetail/:id/",
+            component: AnnouncementDetail,
         },
         {//防止用户在地址栏乱输入东西
             path: '*',

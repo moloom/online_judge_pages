@@ -28,7 +28,7 @@
                 <el-menu-item index="5-4">个人设置</el-menu-item>
                 <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
-              <el-menu-item style="float: right;">
+              <el-menu-item style="float: right;" index="other">
                 <el-input v-model="searchText" style="width: 80%;"
                           placeholder="搜索题目..." size="small"></el-input>&nbsp;
                 <!--              <i class="el-icon-search"></i>-->
@@ -105,8 +105,8 @@ export default {
     search() {
       console.log("search、search、search");
     },
+    //设置当前路径所属的导航栏高亮
     updateActive() {
-      //设置当前路径所属的导航栏高亮
       let path = this.$router.currentRoute.fullPath;
       const name = this.$router.currentRoute.name;
       if (name) {

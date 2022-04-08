@@ -102,7 +102,8 @@
 
       <div class="sidebar">
         <div>
-          日期打卡表，类似力扣题库右边的
+          <!--  引入标签云    -->
+          <TagCloud></TagCloud>
         </div>
       </div>
     </div>
@@ -113,9 +114,14 @@
 import axios from "axios";
 import qs from "qs";
 import {messageTips} from "@/utils/messageTip";
+import TagCloud from "@/components/TagCloud";
+
 
 export default {
   name: "ProblemSet",
+  components:{
+    TagCloud,
+  },
   data() {
     return {
       totalCount: 0,//分页用，总记录条数
@@ -322,17 +328,20 @@ export default {
   },
   created() {
     this.loading = true;
+    this.$store.state.fullscreenLoading=true;
     this.searchTagList();
     this.searchProblemCountByConditions();
   },
   mounted() {
     setTimeout(() => {
       this.loading = false;
+      this.$store.state.fullscreenLoading=false;
     }, 700);
   },
   updated() {
     setTimeout(() => {
       this.loading = false;
+      this.$store.state.fullscreenLoading=false;
     }, 700);
   }
 
