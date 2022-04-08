@@ -2,7 +2,7 @@
 <template>
   <div>
     <h2>公告</h2>
-    <div style="vertical-align: middle;" v-for="c in announcementList" :key="c.id">
+    <div style="vertical-align: middle;margin-bottom: 40px;" v-for="c in announcementList" :key="c.id">
       <el-row class="clearMarginBottom">
         <el-col :span="24">
           <div class="verticalCenter">

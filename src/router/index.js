@@ -18,6 +18,11 @@ import CommentMain from "@/views/comment/CommentMain";
 import CommentSet from "@/views/comment/CommentSet";
 import CommentDetail from "@/views/comment/CommentDetail";
 import AnnouncementDetail from "@/views/AnnouncementDetail";
+import RankingMain from "@/views/ranking/RankingMain";
+import PointRanking from "@/views/ranking/PointRanking";
+import SubmitNumberRank from "@/views/ranking/SubmitNumberRank";
+import SubmitTimesRanking from "@/views/ranking/SubmitTimesRanking";
+import TimesPassRateRank from "@/views/ranking/TimesPassRateRank";
 
 const router = new VueRouter({
     routes: [
@@ -105,6 +110,34 @@ const router = new VueRouter({
             name: "announcementDetail",
             path: "/announcementDetail/:id/",
             component: AnnouncementDetail,
+        },
+        {
+            name: "ranking",
+            path: "/ranking",
+            redirect: "/ranking/pointRanking",
+            component: RankingMain,
+            children: [
+                {
+                    name: "pointRanking",
+                    path: "pointRanking",
+                    component: PointRanking,
+                },
+                {
+                    name: "submitNumberRank",
+                    path: "submitNumberRank",
+                    component: SubmitNumberRank,
+                },
+                {
+                    name: "submitTimesRanking",
+                    path: "submitTimesRanking",
+                    component: SubmitTimesRanking,
+                },
+                {
+                    name: "timesPassRateRank",
+                    path: "timesPassRateRank",
+                    component: TimesPassRateRank,
+                }
+            ]
         },
         {//防止用户在地址栏乱输入东西
             path: '*',
