@@ -23,6 +23,8 @@ import PointRanking from "@/views/ranking/PointRanking";
 import SubmitNumberRank from "@/views/ranking/SubmitNumberRank";
 import SubmitTimesRanking from "@/views/ranking/SubmitTimesRanking";
 import TimesPassRateRank from "@/views/ranking/TimesPassRateRank";
+import AccountSetting from "@/views/user/AccountSetting";
+import UserProfile from "@/views/user/UserProfile";
 
 const router = new VueRouter({
     routes: [
@@ -138,6 +140,16 @@ const router = new VueRouter({
                     component: TimesPassRateRank,
                 }
             ]
+        },
+        {
+            name: "accountSetting",
+            path: "/account/setting",
+            component: AccountSetting,
+        },
+        {
+            name: "userProfile",
+            path: "/profile/:id",
+            component: UserProfile,
         },
         {//防止用户在地址栏乱输入东西
             path: '*',
