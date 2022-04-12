@@ -114,7 +114,6 @@ export default {
       console.log(this.coder.getValue());
       //axios请求
       setTimeout(() => {
-
         this.isLoading = false;
       }, 1000);
     },

@@ -15,5 +15,6 @@ export default new Vuex.Store({
     state: {
         isAtNav: true,//是否显示导航栏
         fullscreenLoading: false,   //全屏加载属性，加载代码在Home.vue
+        searchText: null,//导航栏搜索的内容
     },
 })

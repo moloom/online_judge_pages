@@ -119,7 +119,7 @@ import TagCloud from "@/components/TagCloud";
 
 export default {
   name: "ProblemSet",
-  components:{
+  components: {
     TagCloud,
   },
   data() {
@@ -260,7 +260,9 @@ export default {
             console.log("searchProblemListByConditions请求失败", error);
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
-
+      //查询完后，重置搜索信息
+      if (this.$store.state != null)
+        this.$store.state.searchText = null;
     },
     //查询题目数量
     searchProblemCountByConditions() {
@@ -312,6 +314,17 @@ export default {
       this.condition.start = (pageNumber - 1) * 10;
       this.searchProblemListByConditions();
     },
+    //处理从导航栏搜索跳转到当前界面的事件
+    handleSearch() {
+      console.log("3232");
+      if (this.$store.state.searchText != null) {
+        console.log("hhhh");
+        //清空所有条件
+        this.handleClose();
+        this.keywords = this.$store.state.searchText;
+        this.condition.keyword = this.$store.state.searchText;
+      }
+    },
   },
   watch: {
     keywords: {
@@ -319,29 +332,31 @@ export default {
       handler() {
         this.loading = true;
         this.condition.keyword = this.keywords;
+        this.searchProblemListByConditions();
         setTimeout(() => {
-          this.searchProblemListByConditions();
           this.loading = false;
         }, 1000)
       },
     }
   },
-  created() {
+  created() {console.log("21---",this.$store.state.searchText);
     this.loading = true;
-    this.$store.state.fullscreenLoading=true;
+    this.$store.state.fullscreenLoading = true;
+    // this.handleSearch();
     this.searchTagList();
     this.searchProblemCountByConditions();
   },
   mounted() {
+    console.log("mounted:",this.$store.state.searchText);
     setTimeout(() => {
       this.loading = false;
-      this.$store.state.fullscreenLoading=false;
+      this.$store.state.fullscreenLoading = false;
     }, 700);
   },
   updated() {
     setTimeout(() => {
       this.loading = false;
-      this.$store.state.fullscreenLoading=false;
+      this.$store.state.fullscreenLoading = false;
     }, 700);
   }
 

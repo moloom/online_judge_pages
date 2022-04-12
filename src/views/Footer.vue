@@ -29,7 +29,7 @@ export default {
 
 .separator {
   width: 100%;
-  height: 70px;
+  height: 50px;
   overflow: hidden;
 }
 

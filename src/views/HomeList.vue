@@ -8,7 +8,7 @@
           <div class="verticalCenter">
             <el-avatar size="large"
                        :src="c.userPicture"></el-avatar>
-            <span>{{ c.userName }}：</span>
+            <span style="margin-left: 5px;">{{ c.userName }}：</span>
             <h3 style="margin: 0px 2px">&nbsp;{{ c.title }}</h3>
             <span class="time-style">{{ c.create_time | timer }}</span>
           </div>

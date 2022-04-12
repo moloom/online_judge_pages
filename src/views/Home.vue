@@ -25,11 +25,11 @@
                 <el-menu-item index="5-1">M币：{{ $store.state.sLogin.users.point }}</el-menu-item>
                 <el-menu-item index="5-2" @click="toUserProfile">个人主页</el-menu-item>
                 <el-menu-item index="5-3" @click="toSubmission">提交记录</el-menu-item>
-                <el-menu-item index="5-4" @click="toSubmission">个人设置</el-menu-item>
+                <el-menu-item index="5-4" @click="toAccountSetting">个人设置</el-menu-item>
                 <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
 
-              <el-menu-item style="float: right;" index="other" >
+              <el-menu-item style="float: right;" >
                 <el-input v-model="searchText" style="width: 80%;"
                           placeholder="搜索题目..." size="small"></el-input>&nbsp;
                 <!--              <i class="el-icon-search"></i>-->
@@ -104,24 +104,36 @@ export default {
       })
     },
     //转去排行榜
-    toRanking(){
+    toRanking() {
       this.$router.push({
-        name:'ranking',
+        name: 'ranking',
       })
     },
     //转去个人主页
-    toUserProfile(){
+    toUserProfile() {
       this.$router.push({
-        name:'userProfile',
+        name: 'userProfile',
         params: {
           id: this.$store.state.sLogin.users.id,
         },
       })
     },
+    //转去账号设置
+    toAccountSetting() {
+      this.$router.push({
+        name: 'accountSetting',
+      })
+    },
     //导航栏的搜索功能实现
     search() {
-      console.log("search、search、search");
-
+      //给全局传值
+      this.$store.state.searchText = this.searchText;
+      console.log("1---",this.$store.state.searchText);
+      this.$router.push({
+        name: 'problems',
+      })
+      this.searchText=null;
+      console.log("2---",this.$store.state.searchText);
     },
     //设置当前路径所属的导航栏高亮
     updateActive() {
