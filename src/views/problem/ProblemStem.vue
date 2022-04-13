@@ -51,10 +51,10 @@
     </div>
     <br>
     <!-- 题干   -->
-    <div>
+    <div v-show="problem.problem_stem!=null">
       <div v-html="problem.problem_stem"></div>
+      <br><br><br>
     </div>
-    <br><br><br>
     <!--  输入输出格式  -->
     <div>
       <h4>输入格式</h4>
@@ -98,6 +98,7 @@ export default {
     }
   },
   methods: {
+    //修改喜欢
     updateFavorite() {
       axios({
         url: "/problems/updateFavorite",
@@ -122,7 +123,8 @@ export default {
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
     },
-    updateGoodAndBad(number) {
+    //修改点赞点踩
+    async updateGoodAndBad(number) {
       // 根据number值来辨别要做什么工作，
       //值为1：是点赞操作，需要添加一条点赞记录，值为0：是取消点赞或点踩操作，直接删除数据库中的点赞或点踩信息就行
       //值为-1：是点踩操作，添加一条点踩记录
@@ -170,61 +172,79 @@ export default {
             messageTips(this, '啊哦，网络打了个盹', "error");
           })
     },
+    //拿到题目数据
+    async searchProblemList() {
+      axios({
+        url: "/problems/searchProblemById",
+        method: "post",
+        data: qs.stringify({
+          id: this.$route.params.id,
+        })
+      }).then(response => {
+            if (response.data) {
+              this.problem = response.data;
+            } else {
+              messageTips(this, '啊哦，请求题目失败', "error");
+            }
+          },
+          error => {
+            console.log("searchProblemById 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+    //拿到是否收藏数据
+    async searchIsFavorite() {
+      axios({
+        url: "/problems/isFavorite",
+        method: "post",
+        data: qs.stringify({
+          problemId: this.$route.params.id,
+          userId: localStorage.getItem("id"),
+        })
+      }).then(response => {
+            this.isFavorite = response.data;
+          },
+          error => {
+            console.log("isFavorite 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+    //拿到点赞和点踩的信息
+    async searchIsGood() {
+      axios({
+        url: "/problems/isGood",
+        method: "post",
+        data: qs.stringify({
+          problem_id: this.$route.params.id,
+          user_id: localStorage.getItem("id"),
+        })
+      }).then(response => {
+            this.isGood = response.data.isGood;
+            this.isBad = response.data.isBad;
+          },
+          error => {
+            console.log("isGood 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
+    },
+  },
+  created() {
+    this.$store.state.fullscreenLoading = true;
+    this.searchProblemList();
+    this.searchIsFavorite();
+    this.searchIsGood();
   },
   mounted() {
-    //初始时，拿到题目数据
-    axios({
-      url: "/problems/searchProblemById",
-      method: "post",
-      data: qs.stringify({
-        id: this.$route.params.id,
-      })
-    }).then(response => {
-          if (response.data) {
-            this.problem = response.data;
-          } else {
-            messageTips(this, '啊哦，请求题目失败', "error");
-          }
-        },
-        error => {
-          console.log("searchProblemById 请求失败", error);
-          messageTips(this, '啊哦，网络打了个盹', "error");
-        })
-    //拿到是否收藏数据
-    axios({
-      url: "/problems/isFavorite",
-      method: "post",
-      data: qs.stringify({
-        problemId: this.$route.params.id,
-        userId: localStorage.getItem("id"),
-      })
-    }).then(response => {
-          this.isFavorite = response.data;
-        },
-        error => {
-          console.log("isFavorite 请求失败", error);
-          messageTips(this, '啊哦，网络打了个盹', "error");
-        })
-    //拿到点赞和点踩的信息
-    axios({
-      url: "/problems/isGood",
-      method: "post",
-      data: qs.stringify({
-        problem_id: this.$route.params.id,
-        user_id: localStorage.getItem("id"),
-      })
-    }).then(response => {
-          this.isGood = response.data.isGood;
-          this.isBad = response.data.isBad;
-        },
-        error => {
-          console.log("isGood 请求失败", error);
-          messageTips(this, '啊哦，网络打了个盹', "error");
-        })
+    this.$store.state.fullscreenLoading = true;
+    setTimeout(() => {
+      this.$store.state.fullscreenLoading = false;
+    }, 800);
   },
-  beforeUpdate() {
-    console.log("ProblemStem  beforeUpdate");
-  },
+  updated() {
+    setTimeout(() => {
+      this.$store.state.fullscreenLoading = false;
+    }, 800);
+  }
 }
 </script>
 

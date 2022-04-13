@@ -313,6 +313,11 @@ export default {
     },
     //添加回复
     addComment() {
+      //排除用户不输入评论，直接点发表的问题
+      if (this.commentText===""){
+        messageTips(this, '请输入内容！', "warning");
+        return ;
+      }
       axios({
         url: "/comment/insertComment",
         method: "post",
