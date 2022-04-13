@@ -317,12 +317,10 @@ export default {
     //处理从导航栏搜索跳转到当前界面的事件
     handleSearch() {
       console.log("3232");
-      if (this.$store.state.searchText != null) {
-        console.log("hhhh");
+      if (localStorage.getItem("searchText") != null) {
         //清空所有条件
         this.handleClose();
-        this.keywords = this.$store.state.searchText;
-        this.condition.keyword = this.$store.state.searchText;
+        this.keywords = localStorage.getItem("searchText");
       }
     },
   },
@@ -339,15 +337,17 @@ export default {
       },
     }
   },
-  created() {console.log("21---",this.$store.state.searchText);
+  created() {
     this.loading = true;
     this.$store.state.fullscreenLoading = true;
-    // this.handleSearch();
+    this.handleSearch();
     this.searchTagList();
     this.searchProblemCountByConditions();
   },
   mounted() {
-    console.log("mounted:",this.$store.state.searchText);
+    //删除掉导航栏传过来的条件
+    if (localStorage.getItem("searchText") != null)
+      localStorage.removeItem("searchText");
     setTimeout(() => {
       this.loading = false;
       this.$store.state.fullscreenLoading = false;

@@ -206,7 +206,7 @@ export default {
     setTimeout(() => {
       this.$store.state.fullscreenLoading = false;
     }, 700);
-    console.log(this.moment(this.user.birthday).format("YYYY-MM-DD HH:mm:ss"));
+    // console.log(this.moment(this.user.birthday).format("YYYY-MM-DD HH:mm:ss"));
   },
   updated() {
     setTimeout(() => {

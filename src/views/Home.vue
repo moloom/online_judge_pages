@@ -23,9 +23,9 @@
                   v-show="this.$store.state.sLogin.users.isLogin">
                 <template slot="title">{{ $store.state.sLogin.users.name }}</template>
                 <el-menu-item index="5-1">M币：{{ $store.state.sLogin.users.point }}</el-menu-item>
-                <el-menu-item index="5-2" @click="toUserProfile">个人主页</el-menu-item>
+                <el-menu-item index="profile" @click="toUserProfile">个人主页</el-menu-item>
                 <el-menu-item index="5-3" @click="toSubmission">提交记录</el-menu-item>
-                <el-menu-item index="5-4" @click="toAccountSetting">个人设置</el-menu-item>
+                <el-menu-item index="account" @click="toAccountSetting">个人设置</el-menu-item>
                 <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
 
@@ -127,13 +127,11 @@ export default {
     //导航栏的搜索功能实现
     search() {
       //给全局传值
-      this.$store.state.searchText = this.searchText;
-      console.log("1---",this.$store.state.searchText);
+      localStorage.setItem("searchText",this.searchText);
       this.$router.push({
         name: 'problems',
       })
       this.searchText=null;
-      console.log("2---",this.$store.state.searchText);
     },
     //设置当前路径所属的导航栏高亮
     updateActive() {
