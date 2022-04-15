@@ -87,7 +87,7 @@ export default {
       solveProblemInfo: [],//用户对各个难度题目的解答数量
       percentageArray: [],//题目的百分比
       submissionList: [],//最近提交记录
-      classArr: ["", "green", "red", "yellow", "grey", "orange", "orange"],//评测结果的样式
+      classArr: ["", "green", "yellow", "red", "yellow", "grey", "orange", "orange", "orange", "blue"],//评测结果的样式
     };
   },
   methods: {
@@ -152,8 +152,8 @@ export default {
               //成功拿到数据后修改本地数据
               this.submissionList = response.data;
               //只显示10条
-              if (response.data.length>10){
-                this.submissionList=response.data.slice(0,10);
+              if (response.data.length > 10) {
+                this.submissionList = response.data.slice(0, 10);
               }
             } else {
               messageTips(this, '啊哦，请求提交记录失败!', "warning");
@@ -279,5 +279,9 @@ td {
 
 .orange {
   color: #F2711C;
+}
+
+.blue {
+  color: rgb(33, 133, 208);
 }
 </style>

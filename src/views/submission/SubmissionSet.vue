@@ -28,13 +28,13 @@
         </td>
         <td>{{ sl.languageName }}</td>
         <td :class="classArr[sl.status]">{{ sl.statusName }}</td>
-        <td>{{ sl.exec_time }}</td>
-        <td>{{ sl.consume_memory }}</td>
+        <td>{{ sl.exec_time==null?'NaN':sl.exec_time }}</td>
+        <td>{{ (sl.consume_memory/1024).toFixed(3) }}</td>
         <td>{{ sl.create_time |timer }}</td>
       </tr>
     </table>
     <div class="pagination">
-      <el-pagination
+      <el-pagination page-size="20"
           layout="prev, pager, next"
           @current-change="change"
           :current-page="currentPage"
@@ -56,7 +56,7 @@ export default {
       submissionList: [],
       totalCount: 0,
       currentPage: 1,
-      classArr: ["", "green", "red", "yellow", "grey", "orange", "orange"],//评测结果的样式
+      classArr: ["", "green", "yellow", "red", "yellow", "grey", "orange", "orange", "orange", "blue"],//评测结果的样式
     }
   },
   methods: {
@@ -85,7 +85,7 @@ export default {
     //切换页数
     change(pageNumber) {
       console.log("change", pageNumber);
-      let start = (pageNumber - 1) * 10;
+      let start = (pageNumber - 1) * 20;
       this.searchSubmissionList(start);
     },
     //获取提交记录list
@@ -202,5 +202,8 @@ td {
 
 .orange {
   color: #F2711C;
+}
+.blue {
+  color: rgb(33, 133, 208);
 }
 </style>

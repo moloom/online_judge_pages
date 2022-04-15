@@ -111,18 +111,55 @@ export default {
     //提交代码
     submitCode() {
       this.isLoading = true;
+      //防止空内容直接提交
+      if (this.code.getValue === "")
+        return;
+
+      let language = 0;
+      if (this.mode === "Java"||this.mode===this.modes[1].value)
+        language = 2;
+      else if (this.mode === "C"||this.mode===this.modes[0].value)
+        language = 1;
+      else language = 3;
       console.log(this.coder.getValue());
       //axios请求
+      axios({
+        url: "/problems/submitCode",
+        method: "post",
+        data: qs.stringify({
+          user_id: this.$store.state.sLogin.users.id,
+          problem_id: this.$route.params.id,
+          code: this.coder.getValue(),
+          language: language,
+        })
+      }).then(response => {
+            if (response.data)
+              this.$router.push({
+                name: 'submissionDetail',
+                params: {
+                  id: response.data,
+                },
+              })
+            else
+              messageTips(this, '啊哦，代码保存失败!', "error");
+          },
+          error => {
+            console.log("submitCode 请求失败", error);
+            messageTips(this, '啊哦，网络打了个盹', "error");
+          })
       setTimeout(() => {
         this.isLoading = false;
       }, 1000);
     },
     //保存代码
     saveCode() {
+      //防止空内容直接提交
+      if (this.code.getValue === "")
+        return;
       let language = 0;
-      if (this.mode === "Java")
+      if (this.mode === "Java"||this.mode===this.modes[1].value)
         language = 2;
-      else if (this.mode === "C")
+      else if (this.mode === "C"||this.mode===this.modes[0].value)
         language = 1;
       else language = 3;//Text文本类型
       console.log(this.coder.getValue());
@@ -178,6 +215,19 @@ export default {
       )
     },
     // 初始化
+    _getLanguage(language) {
+      // 在支持的语法类型列表中寻找传入的语法类型
+      return this.modes.find((mode) => {
+        // 所有的值都忽略大小写，方便比较
+        let currentLanguage = language.toLowerCase()
+        let currentLabel = mode.label.toLowerCase()
+        let currentValue = mode.value.toLowerCase()
+
+        // 由于真实值可能不规范，例如 java 的真实值是 x-java ，所以讲 value 和 label 同时和传入语法进行比较
+        return currentLabel === currentLanguage || currentValue === currentLanguage
+      })
+    },
+    // 获取当前语法类型
     _initialize() {
       // 初始化编辑器实例，传入需要被实例化的文本域对象和默认配置
       this.coder = CodeMirror.fromTextArea(this.$refs.textarea, this.options)
@@ -201,22 +251,7 @@ export default {
           this.mode = modeObj.label
         }
       }*/
-    }
-    ,
-    // 获取当前语法类型
-    _getLanguage(language) {
-      // 在支持的语法类型列表中寻找传入的语法类型
-      return this.modes.find((mode) => {
-        // 所有的值都忽略大小写，方便比较
-        let currentLanguage = language.toLowerCase()
-        let currentLabel = mode.label.toLowerCase()
-        let currentValue = mode.value.toLowerCase()
-
-        // 由于真实值可能不规范，例如 java 的真实值是 x-java ，所以讲 value 和 label 同时和传入语法进行比较
-        return currentLabel === currentLanguage || currentValue === currentLanguage
-      })
-    }
-    ,
+    },
     // 更改模式
     changeMode(val) {
       // 修改编辑器的语法配置
@@ -224,12 +259,9 @@ export default {
 
       // 获取修改后的语法
       let label = this._getLanguage(val).label.toLowerCase()
-
       // 允许父容器通过以下函数监听当前的语法值
       this.$emit('language-change', label)
-    }
-    ,
-
+    },
   }
 };
 </script>

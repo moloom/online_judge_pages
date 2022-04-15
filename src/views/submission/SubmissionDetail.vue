@@ -9,8 +9,8 @@
           <td style="width: 17%;">题目</td>
           <td style="width: 6%;">语言</td>
           <td style="width: 15%;">评测结果</td>
-          <td style="width: 6%;">耗时</td>
-          <td style="width: 6%;">内存</td>
+          <td style="width: 8%;">耗时</td>
+          <td style="width: 8%;">内存</td>
           <td style="width: 19%;">提交时间</td>
         </tr>
 
@@ -24,14 +24,25 @@
           </td>
           <td>{{ submission.languageName }}</td>
           <td :class="classArr[submission.status]">{{ submission.statusName }}</td>
-          <td>{{ submission.exec_time }}</td>
-          <td>{{ submission.consume_memory }}</td>
+          <td>{{ submission.exec_time == null ? 'NaN' : submission.exec_time }} ms</td>
+          <td>{{ (submission.consume_memory / 1024).toFixed(3) }} MB</td>
           <td>{{ submission.create_time |timer }}</td>
         </tr>
       </table>
     </div>
-    <div class="error-info" v-show="submission.status>1">
-      <div>{{ submission.error_info }}</div>
+    <!--    <div class="error-info" v-show="submission.status>1">
+          <div>{{ submission.error_info }}</div>
+        </div>-->
+    <div style="margin: 0 auto;  width: 1200px;padding-top: 30px;" v-show="submission.error_info!=null">
+      <mavon-editor style="min-height: 100%;padding: 0px 25px;" class="error-info"
+                    :value="submission.error_info"
+                    :external-link="externalLink"
+                    :toolbarsFlag="false"
+                    :boxShadow="false"
+                    :subfield="false"
+                    :editable="false"
+                    previewBackground="white"
+                    defaultOpen="preview"></mavon-editor>
     </div>
     <div style="margin: 0 auto;  width: 1200px;padding-top: 30px;">
       <mavon-editor style="min-height: 100%;border:1px solid rgba(34,36,38,.15); font-size: 22px;padding-top: 20px;"
@@ -57,7 +68,7 @@ export default {
   data() {
     return {
       submission: {},
-      classArr: ["", "green", "red", "yellow", "grey", "orange", "orange"],//评测结果的样式
+      classArr: ["", "green", "yellow", "red", "yellow", "grey", "orange", "orange", "orange", "blue"],//评测结果的样式
       externalLink: {
         markdown_css: () => '/md/github-markdown.min.css',
         // markdown_css: false,
@@ -115,6 +126,12 @@ export default {
       this.$store.state.fullscreenLoading = false;
     }, 1000);
   },
+  updated() {
+    //延时关闭加载
+    setTimeout(() => {
+      this.$store.state.fullscreenLoading = false;
+    }, 1000);
+  }
 }
 </script>
 
@@ -150,7 +167,6 @@ td {
   min-height: 80px;
   margin: 30px auto 0;
   border: rgba(242, 113, 28, 0.94) solid 1px;
-  padding: 10px 20px;
   color: #ef4743;
 }
 
@@ -183,5 +199,9 @@ td {
 
 .orange {
   color: #F2711C;
+}
+
+.blue {
+  color: rgb(33, 133, 208);
 }
 </style>

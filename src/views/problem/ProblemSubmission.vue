@@ -8,8 +8,8 @@
         <td style="width: 17%;">题目</td>
         <td style="width: 6%;">语言</td>
         <td style="width: 15%;">评测结果</td>
-        <td style="width: 6%;">耗时</td>
-        <td style="width: 6%;">内存</td>
+        <td style="width: 8%;">耗时</td>
+        <td style="width: 8%;">内存</td>
         <td style="width: 19%;">提交时间</td>
       </tr>
 
@@ -26,8 +26,8 @@
         </td>
         <td>{{ sl.languageName }}</td>
         <td :class="classArr[sl.status]">{{ sl.statusName }}</td>
-        <td>{{ sl.exec_time }}</td>
-        <td>{{ sl.consume_memory }}</td>
+        <td>{{ sl.exec_time==null?'NaN':sl.exec_time }}</td>
+        <td>{{ (sl.consume_memory/1024).toFixed(3) }}</td>
         <td>{{ sl.create_time |timer }}</td>
       </tr>
     </table>
@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       submissionList: [],
-      classArr: ["", "green", "red", "yellow", "grey", "orange", "orange"],
+      classArr: ["", "green", "yellow", "red", "yellow", "grey", "orange", "orange", "orange", "blue"],
     }
   },
   methods: {
@@ -145,5 +145,9 @@ td {
 
 .orange {
   color: #F2711C;
+}
+
+.blue {
+  color: rgb(33, 133, 208);
 }
 </style>

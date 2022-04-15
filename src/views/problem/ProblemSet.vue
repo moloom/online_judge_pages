@@ -343,6 +343,10 @@ export default {
     this.handleSearch();
     this.searchTagList();
     this.searchProblemCountByConditions();
+    if (localStorage.getItem("id")==null)
+      this.$router.push({
+        path:"/login"
+      })
   },
   mounted() {
     //删除掉导航栏传过来的条件
