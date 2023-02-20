@@ -5,7 +5,7 @@ vue create 项目名  创建vue项目
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## Compiles and hot-reloads for development 启动命令
 ```
 npm run serve
 ```
