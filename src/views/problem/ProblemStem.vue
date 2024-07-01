@@ -124,7 +124,7 @@ export default {
           })
     },
     //修改点赞点踩
-    async updateGoodAndBad(number) {
+    updateGoodAndBad(number) {
       // 根据number值来辨别要做什么工作，
       //值为1：是点赞操作，需要添加一条点赞记录，值为0：是取消点赞或点踩操作，直接删除数据库中的点赞或点踩信息就行
       //值为-1：是点踩操作，添加一条点踩记录
@@ -173,7 +173,7 @@ export default {
           })
     },
     //拿到题目数据
-    async searchProblemList() {
+    searchProblemList() {
       axios({
         url: "/problems/searchProblemById",
         method: "post",
@@ -193,7 +193,7 @@ export default {
           })
     },
     //拿到是否收藏数据
-    async searchIsFavorite() {
+    searchIsFavorite() {
       axios({
         url: "/problems/isFavorite",
         method: "post",
@@ -210,7 +210,7 @@ export default {
           })
     },
     //拿到点赞和点踩的信息
-    async searchIsGood() {
+    searchIsGood() {
       axios({
         url: "/problems/isGood",
         method: "post",

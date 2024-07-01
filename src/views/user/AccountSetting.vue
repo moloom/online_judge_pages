@@ -133,7 +133,7 @@ export default {
           })
     },
     //获取用户信息
-    async searchUser() {
+    searchUser() {
       axios({
         url: "/user/searchUserById",
         method: "post",
@@ -152,7 +152,7 @@ export default {
           })
     },
     //查询语言list
-    async searchLanguage() {
+    searchLanguage() {
       axios({
         url: "/user/searchLanguageList",
         method: "post",

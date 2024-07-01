@@ -27,7 +27,7 @@ import Moment from 'moment'
 Vue.prototype.moment = Moment
 
 Vue.use(ElementUI);
-axios.defaults.baseURL = 'http://localhost:8888';
+axios.defaults.baseURL = '/api';
 // axios.defaults.withCredentials=false;
 Vue.config.productionTip = false
 new Vue({
