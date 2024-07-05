@@ -1,5 +1,7 @@
 <template>
-  <div v-loading.fullscreen.lock="$store.state.fullscreenLoading">
+  <!--  全屏加载动画 -->
+  <!--  <div v-loading.fullscreen.lock="$store.state.fullscreenLoading">-->
+  <div>
     <div style="width: 1200px; margin: 0 auto;" v-show="$store.state.isAtNav">
       <el-container class="GlobleCenter">
         <div>
@@ -29,7 +31,7 @@
                 <el-menu-item index="5-5" @click="logout">登出</el-menu-item>
               </el-submenu>
 
-              <el-menu-item style="float: right;" >
+              <el-menu-item style="float: right;">
                 <el-input v-model="searchText" style="width: 80%;"
                           placeholder="搜索题目..." size="small"></el-input>&nbsp;
                 <!--              <i class="el-icon-search"></i>-->
@@ -46,7 +48,6 @@
               </el-menu-item>
             </el-menu>
           </el-header>
-
         </div>
       </el-container>
     </div>
@@ -127,11 +128,11 @@ export default {
     //导航栏的搜索功能实现
     search() {
       //给全局传值
-      localStorage.setItem("searchText",this.searchText);
+      localStorage.setItem("searchText", this.searchText);
       this.$router.push({
         name: 'problems',
       })
-      this.searchText=null;
+      this.searchText = null;
     },
     //设置当前路径所属的导航栏高亮
     updateActive() {
