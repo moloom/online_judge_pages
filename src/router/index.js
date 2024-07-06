@@ -27,6 +27,8 @@ import AccountSetting from "@/views/user/AccountSetting";
 import UserProfile from "@/views/user/UserProfile";
 
 const router = new VueRouter({
+    //history 在地址栏不带#号。默认是hash模式，带#号
+    mode: 'history',
     routes: [
         {
             name: "home",
